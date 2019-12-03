@@ -65,13 +65,13 @@
         };
 
         //Explosion GIF
-        const explosion_gif = 'https://media.giphy.com/media/bJaxgozZusl2g/giphy.gif';
+        const EXPLOSION_GIF = 'https://media.giphy.com/media/bJaxgozZusl2g/giphy.gif';
         //Lamp GIF
-        const lamp_gif = 'https://media.giphy.com/media/l1KVaST85EIicDiLe/giphy.gif';
+        const LAMP_GIF = 'https://media.giphy.com/media/l1KVaST85EIicDiLe/giphy.gif';
         //Empty field GIF
-        const empty_field_gif = 'https://media.giphy.com/media/3ov9k1173PdfJWRsoE/giphy.gif';
+        const EMPTY_FIELD_GIF = 'https://media.giphy.com/media/3ov9k1173PdfJWRsoE/giphy.gif';
         //Winner GIF
-        const winner_gif = 'https://media.giphy.com/media/2gtoSIzdrSMFO/giphy.gif';
+        const WINNER_GIF = 'https://media.giphy.com/media/2gtoSIzdrSMFO/giphy.gif';
 
 
         //var objects = {};
@@ -712,7 +712,7 @@
                     }
 
                     // Reset card and text
-                    document.getElementById(CARD_ID).src = empty_field_gif;
+                    document.getElementById(CARD_ID).src = EMPTY_FIELD_GIF;
                     document.getElementById(CARD_LABEL_ID).innerText = EMPTY_FIELD_TEXT;
                     document.getElementById(CARD_TEXT_ID).innerText = '';
                     break;
@@ -725,7 +725,7 @@
 
                     // Set card and text to knowledge theme
                     // Choose random knowledge phrase
-                    document.getElementById(CARD_ID).src = lamp_gif;
+                    document.getElementById(CARD_ID).src = LAMP_GIF;
                     document.getElementById(CARD_LABEL_ID).innerText = LAMP_FIELD_TEXT;
                     document.getElementById(CARD_TEXT_ID).innerText = getKnowledgeText();
 
@@ -736,7 +736,7 @@
                         ignoreAction = false;
                         break;
                     }
-                    document.getElementById(CARD_ID).src = explosion_gif;
+                    document.getElementById(CARD_ID).src = EXPLOSION_GIF;
                     document.getElementById(CARD_LABEL_ID).innerText = ACTION_FIELD_TEXT;
                     let action_card = getActionText();
                     document.getElementById(CARD_TEXT_ID).innerText = action_card.text;
@@ -755,7 +755,7 @@
 
                     break;
                 case 3:
-                    document.getElementById(CARD_ID).src = winner_gif;
+                    document.getElementById(CARD_ID).src = WINNER_GIF;
                     document.getElementById(CARD_LABEL_ID).innerText = WINNER_FIELD_TEXT;
                     document.getElementById(CARD_TEXT_ID).innerText = '';
 
@@ -837,9 +837,10 @@
         //TODO: Char classes for each players
         class Character {
 
-            constructor(game, field_nr) {
-                this.game = game;
-                this.field_nr = field_nr
+            constructor(character_image, field_nr, player) {
+                this.character_image = character_image;
+                this.field_nr = field_nr;
+                this.player = player;
             }
 
         }
@@ -857,7 +858,7 @@
             //New science card
             if (action_card.card === 1) {
                 document.getElementById(CARD_TEXT_ID).innerText = getKnowledgeText();
-                document.getElementById(CARD_ID).src = lamp_gif;
+                document.getElementById(CARD_ID).src = LAMP_GIF;
             }
 
             ignoreAction = true;
