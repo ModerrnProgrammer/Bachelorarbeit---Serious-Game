@@ -15,7 +15,7 @@ a {
     height: 600px;
     position: absolute;
     left: 1650px;
-    top: 60px;
+    top: 120px;
     background-color: gray;
     padding: 50px;
 }
@@ -40,6 +40,7 @@ label {
     font-size: xx-large;
     border-style: double;
     margin-bottom: 10px;
+    display: block;
 }
 
 #card_image {
@@ -65,7 +66,7 @@ label {
     width: 300px;
     height: 680px;
     position: absolute;
-    top: 60px;
+    top: 120px;
     bottom: 0;
     right: 0;
     left: 1300px;
@@ -110,3 +111,12 @@ label {
     background-color: gray;
     text-align: center;
 }
+
+#current_player_div {
+    width: 650px;
+    position: absolute;
+    left: 1300px;
+}
+
+
+
