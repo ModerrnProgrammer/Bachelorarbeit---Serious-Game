@@ -17,7 +17,7 @@
             </div>
             <button class="my_button" id="cube_roll_button" onclick="roll_the_dice()">START</button>
             <button class="my_button" id="cube_stop_button" onclick="stop_the_dice()">STOP</button>
-            <button class="my_button" id="cube_move_fore" onclick="backToStart()">BACK TO START</button>
+            <button class="my_button" id="goal_button" onclick="toGoal()">ZIEL</button>
 
          </div>
 
@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <div id="card_image_overlay" hidden>
-                    <label id="card_image_overlay_label" onclick="executeCardAction(currentActionCard);">Klick</label>
+                    <label id="card_image_overlay_label" onclick="executeCardAction(currentActionCard);">Weiter</label>
                 </div>
             </div>
             <div id="card_bottom">
@@ -91,7 +91,8 @@
         let action_cards_real;
         // List of all Action cards - fictitious story
         let action_cards_fictitious;
-
+        // current card set length
+        let card_set_length
         //public var for steps to go
         let steps = 0;
         //public print x and y values
@@ -146,7 +147,7 @@
                 initFieldTypes();
                 initKnowledgeCards();
                 initActionCardsReal();
-                initActionCardsFictitious()
+                initActionCardsFictitious();
 
                 generateGameBoard(this);
                 drawCharacters(this);
@@ -154,6 +155,8 @@
                 console.error('Error while drawing', e);
             }
         }
+
+
 
         function drawCharacters(game) {
             /*
@@ -573,7 +576,7 @@
                     number = 1;
                 }
                 document.getElementById('cube_numberfield').innerText = number;
-                await Sleep(10);
+                await Sleep(25);
 
             }
         }
@@ -587,22 +590,18 @@
             }
         }
 
-        var stop_value_x;
-        var stop_value_y;
+        let stop_value_x;
+        let stop_value_y;
 
         function update() {
-            //TODO: Update method with game logic
-            //Select stop values with field nr
-            //if (field_nr === -1) return;
+
             if (steps !== 0) {
                 move();
             }
         }
 
-        //TODO: Bug Reset to start, wrong way!
-        //TODO: Bug Go multiple fields
-        //TODO: Bug False way
-        //TODO: Bug false number of steps
+
+        //TODO: Bug false number of steps ?
         let waitForAction = false;
         function move() {
             console.log('move');
@@ -612,16 +611,22 @@
             ready = false;
 
 
-
+            //Start field pos check
             if (field_nr < 0) {
                 field_nr = 0;
             }
+
+            if (field_nr + steps > gamefield_types.length) {
+                ready = true;
+                return;
+            }
+
 
 
             let pos_tuppel = calculateNewField(field_nr);
             stop_value_x = pos_tuppel.pos_x;
             stop_value_y = pos_tuppel.pos_y;
-            const SPEED = 5;
+            const SPEED = 10;
 
             console.log(player1.x, player1.y, stop_value_x, stop_value_y);
             //TODO: Change to current player
@@ -675,10 +680,18 @@
                     if (steps < 0) field_nr--;
                 }
                 if (steps === 0) {
+                    checkWin();
                     setImageAndText();
                     ready = true;
                 }
 
+            }
+        }
+
+        function checkWin() {
+            if (gamefield_types[field_nr] === 3) {
+                alert('Winner!');
+                //TODO: Remove player from Player Pool
             }
         }
 
@@ -730,7 +743,7 @@
                     console.log(action_card.text);
                     console.log(action_card.action);
                     console.log(action_card.card);
-                    //TODO: wait until click to execute action
+
                     //TODO: IDee: Alle Buttons ausblenden. Fläche über dem Bild einblenden mit dem Titel Klick oder so
                     //Auf dem Klick Zug ausführen
                     document.getElementById('card_image_overlay').hidden = false;
@@ -844,7 +857,7 @@
             //New science card
             if (action_card.card === 1) {
                 document.getElementById(CARD_TEXT_ID).innerText = getKnowledgeText();
-                document.getElementById(CARD_ID).src = LAMP_FIELD_TEXT;
+                document.getElementById(CARD_ID).src = lamp_gif;
             }
 
             ignoreAction = true;
@@ -854,9 +867,9 @@
             document.getElementById('image_div').style.opacity = "1";
         }
 
-        function backToStart() {
-            steps = -100;
-            field_nr--;
+        function toGoal() {
+            steps = +39;
+            field_nr++;
         }
 
     </script>
