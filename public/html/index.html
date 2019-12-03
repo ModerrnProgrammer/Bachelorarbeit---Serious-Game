@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+</head>
+<body>
+
+    <div id="content">
+        <span id="canvas_content_container"></span>
+        <div id="cube_div">
+            <h1 class="my_headline" id="cube_field_headline">Würfel</h1>
+            <div id="cube_numberfield_label">
+                <label id="cube_numberfield">-1</label>
+            </div>
+            <button class="my_button" id="cube_roll_button" onclick="roll_the_dice()">START</button>
+            <button class="my_button" id="cube_stop_button" onclick="stop_the_dice()">STOP</button>
+            <button class="my_button" id="cube_move_fore" onclick="backToStart()">BACK TO START</button>
+
+         </div>
+
+        <div id="card_div">
+            <div class="my_headline" id="card_headline">
+                <h1>Cards</h1>
+            </div>
+            <div id="card_content">
+                <div id="image_main_div">
+                    <div id="image_div">
+                        <img id="card_image" src="https://media.giphy.com/media/3ov9k1173PdfJWRsoE/giphy.gif" alt="Image">
+                    </div>
+                </div>
+                <div id="card_image_overlay" hidden>
+                    <label id="card_image_overlay_label" onclick="executeCardAction(currentActionCard);">Klick</label>
+                </div>
+            </div>
+            <div id="card_bottom">
+                <label id="card_bottom_label">Start the game</label>
+                <label id="card_text">Paste text here</label>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        var config = {
+            type: Phaser.AUTO,
+            width: 1200,
+            height: 800,
+            parent: 'canvas_content_container',
+            title: 'MyGame',
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    gravity: { y: 100 }
+                }
+            },
+            scene: {
+                preload: preload,
+                create: create,
+                update: update
+            }
+        };
+
+        //Explosion GIF
+        const explosion_gif = 'https://media.giphy.com/media/bJaxgozZusl2g/giphy.gif';
+        //Lamp GIF
+        const lamp_gif = 'https://media.giphy.com/media/l1KVaST85EIicDiLe/giphy.gif';
+        //Empty field GIF
+        const empty_field_gif = 'https://media.giphy.com/media/3ov9k1173PdfJWRsoE/giphy.gif';
+        //Winner GIF
+        const winner_gif = 'https://media.giphy.com/media/2gtoSIzdrSMFO/giphy.gif';
+
+
+        //var objects = {};
+        let game = new Phaser.Game(config);
+
+        //Player Var
+        let player1;
+        //Current field position
+        let field_nr = 0;
+        //All game field positions
+        let gamefield_positions;
+        //game field type list
+        let gamefield_types;
+        // List of all Knowledge Cards
+        let knowledge_cards;
+        // List of all Action cards - reality near story
+        let action_cards_real;
+        // List of all Action cards - fictitious story
+        let action_cards_fictitious;
+
+        //public var for steps to go
+        let steps = 0;
+        //public print x and y values
+        var_print_x = 250;
+        var_print_y = 250;
+        //game is busy like moving
+        let ready = true;
+
+
+        //constants
+        const CARD_ID = 'card_image';
+        const CARD_LABEL_ID = 'card_bottom_label';
+        const CARD_TEXT_ID = 'card_text';
+
+        const EMPTY_FIELD_TEXT = 'No card!';
+        const LAMP_FIELD_TEXT = 'Knowledge Card!';
+        const ACTION_FIELD_TEXT = 'Action Card!';
+        const WINNER_FIELD_TEXT = 'YOU ARE THE WINNER';
+
+
+        function preload () {
+            try {
+
+                //Load Characters
+                this.load.image('pinki_left', './images/pink_left.png');
+                this.load.image('pinki_right', './images/pink_right.png');
+                this.load.image('red_left', './images/red_left.png');
+                this.load.image('red_right', './images/red_right.png');
+                this.load.image('blue_left', './images/blue_left.png');
+                this.load.image('blue_right', './images/blue_right.png');
+                this.load.image('yellow_left', './images/yellow_left.png');
+                this.load.image('yellow_right', './images/yellow_right.png');
+
+                //Load game fields
+                this.load.image('explode', './images/explode.png');
+                this.load.image('lamp', './images/lamp.png');
+                this.load.image('start', './images/start_field.png');
+                this.load.image('goal', './images/goal_field.png');
+                this.load.image('empty', './images/empty_field.png');
+            } catch (e) {
+                alert('Cant load an image');
+                console.log('ERROR on image loading');
+            }
+        }
+
+        function create () {
+            console.log('CREATE');
+            this.cameras.main.backgroundColor.setTo(220,220,220);
+
+            try {
+                initFieldValues();
+                initFieldTypes();
+                initKnowledgeCards();
+                initActionCardsReal();
+                initActionCardsFictitious()
+
+                generateGameBoard(this);
+                drawCharacters(this);
+            } catch (e) {
+                console.error('Error while drawing', e);
+            }
+        }
+
+        function drawCharacters(game) {
+            /*
+            //Pink
+            objects.character_pink_left = game.add.image(50,50, 'pinki_left');
+            objects.character_pink_right = game.add.image(100,50, 'pinki_right');
+            //Red
+            objects.character_red_left = game.add.image(150,50, 'red_left');
+            objects.character_red_left = game.add.image(150,50, 'red_left');
+            //Blue
+            objects.character_blue_left = game.add.image(250,50, 'blue_left');
+            objects.character_blue_right = game.add.image(300,50, 'blue_right');
+            //Yellow
+            objects.character_yellow_left = game.add.image(350,50, 'yellow_left');
+            objects.character_yellow_right = game.add.image(400,50, 'yellow_right');
+            */
+            player1 = game.add.sprite(400,400, 'pinki_left');
+
+
+            game.add.image(100,50, 'pinki_right');
+            game.add.image(150,50, 'red_left');
+            game.add.image(200,50, 'red_right');
+            game.add.image(250,50, 'blue_left');
+            game.add.image(300,50, 'blue_right');
+            game.add.image(350,50, 'yellow_left');
+            game.add.image(400,50, 'yellow_right');
+        }
+
+        function print_start_fields(game) {
+            const start_field_bias = 50;
+            const x_bias_left = 35;
+
+            game.add.image(400, 400, 'start');
+            draw_line(game, 400, 400 - start_field_bias, 400, 250);
+            game.add.image(400, 250, 'explode');
+            draw_line(game, 400 - x_bias_left, 250, var_print_x, var_print_y);
+            game.add.image(var_print_x, var_print_y, 'empty');
+        }
+
+        function print_common_fields(game) {
+            print_field(game, 'below', 'lamp');
+            print_field(game, 'below', 'explode');
+            print_field(game, 'below', 'lamp');
+            print_field(game, 'right', 'explode');
+            print_field(game, 'right', 'lamp');
+            print_field(game, 'right', 'empty');
+            print_field(game, 'above', 'explode');
+            print_field(game, 'above', 'lamp');
+            print_field(game, 'above', 'explode');
+            print_field(game, 'above', 'lamp');
+            print_field(game, 'left', 'explode');
+            print_field(game, 'left', 'empty');
+            print_field(game, 'left', 'lamp');
+            print_field(game, 'left', 'lamp');
+            print_field(game, 'below', 'lamp');
+            print_field(game, 'below', 'explode');
+            print_field(game, 'below', 'lamp');
+            print_field(game, 'below', 'empty');
+            print_field(game, 'below', 'explode');
+            print_field(game, 'right', 'lamp');
+            print_field(game, 'right', 'explode');
+            print_field(game, 'right', 'lamp');
+            print_field(game, 'right', 'explode');
+            print_field(game, 'right', 'empty');
+            print_field(game, 'right', 'explode');
+            print_field(game, 'above', 'lamp');
+            print_field(game, 'above', 'explode');
+            print_field(game, 'above', 'empty');
+            print_field(game, 'above', 'lamp');
+            print_field(game, 'above', 'explode');
+            print_field(game, 'right', 'lamp');
+            print_field(game, 'below', 'explode');
+            print_field(game, 'below', 'lamp');
+            print_field(game, 'below', 'lamp');
+            print_field(game, 'below', 'empty');
+            print_field(game, 'below', 'lamp');
+            print_field(game, 'right', 'lamp');
+            print_field(game, 'right', 'explode');
+            print_field(game, 'above', 'explode');
+            print_field(game, 'above', 'lamp');
+            print_field(game, 'above', 'lamp');
+        }
+
+        function print_goal_field(game) {
+            const y_bias_above = 35;
+            const goal_pos_bias = 150;
+
+            draw_line(game, var_print_x, var_print_y - y_bias_above, var_print_x, var_print_y - 100);
+            game.add.image(var_print_x, var_print_y - goal_pos_bias, 'goal');
+        }
+
+        function generateGameBoard(game) {
+
+            //Manual print first 3 fields
+            print_start_fields(game);
+            //Relational printing
+            print_common_fields(game);
+            //Manual print last field
+            print_goal_field(game);
+
+        }
+
+        function initFieldValues() {
+            gamefield_positions = JSON.parse('[{"pos_x":400,"pos_y":400},{"pos_x":400,"pos_y":250},' +
+                '{"pos_x":250,"pos_y":250},{"pos_x":250,"pos_y":350},' +
+                '{"pos_x":250,"pos_y":450},{"pos_x":250,"pos_y":550},{"pos_x":350,"pos_y":550},' +
+                '{"pos_x":450,"pos_y":550},{"pos_x":550,"pos_y":550},{"pos_x":550,"pos_y":450},' +
+                '{"pos_x":550,"pos_y":350},{"pos_x":550,"pos_y":250},{"pos_x":550,"pos_y":150},' +
+                '{"pos_x":450,"pos_y":150},{"pos_x":350,"pos_y":150},{"pos_x":250,"pos_y":150},' +
+                '{"pos_x":150,"pos_y":150},{"pos_x":150,"pos_y":250},{"pos_x":150,"pos_y":350},' +
+                '{"pos_x":150,"pos_y":450},{"pos_x":150,"pos_y":550},{"pos_x":150,"pos_y":650},' +
+                '{"pos_x":250,"pos_y":650},{"pos_x":350,"pos_y":650},{"pos_x":450,"pos_y":650},' +
+                '{"pos_x":550,"pos_y":650},{"pos_x":650,"pos_y":650},{"pos_x":750,"pos_y":650},' +
+                '{"pos_x":750,"pos_y":550},{"pos_x":750,"pos_y":450},{"pos_x":750,"pos_y":350},' +
+                '{"pos_x":750,"pos_y":250},{"pos_x":750,"pos_y":150},{"pos_x":850,"pos_y":150},' +
+                '{"pos_x":850,"pos_y":250},{"pos_x":850,"pos_y":350},{"pos_x":850,"pos_y":450},' +
+                '{"pos_x":850,"pos_y":550},{"pos_x":850,"pos_y":650},{"pos_x":950,"pos_y":650},' +
+                '{"pos_x":1050,"pos_y":650},{"pos_x":1050,"pos_y":550},{"pos_x":1050,"pos_y":450},' +
+                '{"pos_x":1050,"pos_y":350}, {"pos_x":1050,"pos_y":200}]');
+
+        }
+
+        function initFieldTypes() {
+            /*
+             * -1: Start field
+             *  0: Empty field
+             *  1: Knowledge field (lamp, yellow)
+             *  2: Action field (explosion, orange)
+             *  3: Goal field
+             */
+            gamefield_types = [-1, 2, 0, 1, 2, 1, 2, 1, 0, 2, 1, 2, 1, 2, 0, 1, 1, 1, 2, 1, 0, 2, 1, 2, 1, 2, 0, 2,
+                1, 2, 0, 1, 2, 1, 2, 1, 1, 0, 1, 1, 2, 2, 1, 1, 3];
+        }
+
+        function initKnowledgeCards() {
+            knowledge_cards = [
+                "Ziele des Präsentierens sind Informieren und Überzeugen",
+                "Informieren: dem Empfänger alle Informationen zur Hand geben, die er benötigt, " +
+                    "um nach der Präsentation zur gewünschten Art aktiv zu werden",
+                "Titel von beruflichen Präsentationen: dürfen Aussagen enthalten",
+                "Titel von allgemeinen Präsentationen: sind meistens aneinander gereihte Stichworte",
+                "Kommunikation ist die Übermittlung von Nachrichten vom Sender zum Empfänger.",
+                "Ein möglicher Kanal zur Informationsübermittlung ist: akustisch (Stimme, Klang)",
+                "Ein möglicher Kanal zur Informationsübermittlung ist: visuell (PPT, Mimik, Gestik)",
+                "Ein möglicher Kanal zur Informationsübermittlung ist: taktil (Berührung, Demonstrationsobjekt)",
+                "Wer eine Präsentation hält, spricht den Sender über mehrere Kanäle an.",
+                "Ein möglicher Kanal zur Informationsübermittlung ist: olfaktorisch (Geruch, Geschmack)",
+                "not to do: zu laut/leise reden",
+                "not to do: zu überladene Präsentationen",
+                "not to do: zu viele Folien",
+                "to do: Raumgestaltung und -größe den Rahmenbedingungen anpassen",
+                "Jede Nachricht hat vier Seiten: Sachinformation, Appell, Beziehungshinweis und Selbstkundgabe",
+                "Prozess des Präsentierens: Strukturieren Formulieren Visualisieren Editieren Präsentieren",
+                "Strukturieren: sowohl den Inhalt, als auch die Planung der Präsentation",
+                "Formulieren: logisch strukturierte Argumente zu einer Geschichte verknüpfen",
+                "Visualisieren: Informationen in ein Bild übersetzen",
+                "Editieren: die Präsentation proben",
+                "Präsentieren: der eigentliche Auftritt vor Publikum",
+                "Bevor man mit einer Präsentation startet, sollte das Ziel der Präsentation klar sein",
+                "1.\tDas Ziel der Präsentation kann mit folgenden Fragen geklärt werden:  Was sollen die Teilnehmer " +
+                    "nach der Präsentation vom Thema wissen? Was sollen sie vom Thema halten? Was sollen sie tun?",
+                "Präsentationen dürfen unterhaltsam sein. Dabei helfen Bilder und Anekdoten.",
+                "Der Nutzen steht  vor der Unterhaltung.",
+                "Erfolgreiche Präsentationen leben von der Interaktion mit dem Publikum.",
+                "Zwei bis drei Minuten pro Folie reden.",
+                "Präsentationsmedium: Flipchart",
+                "Präsentationsmedium: Beamer-Präsentation",
+                "•\tVorteile Beamer-Präsentation:  keine Folien ausdrucken Änderungen und Korrekturen\n" +
+                    "sind bis zur letzten Minute möglich Einbindung von Musik und Video möglich.",
+                "Nachteile Beamer-Präsentation:  Technikprobleme nicht spontan",
+                "Präsentationsmedium: Overhead-Projektor",
+                "Präsentationsmedium: Pinnwand",
+                "Vorteil Pinnwand: Gut, wenn in Interaktion mit dem Publikum etwas erarbeitet werden soll.",
+                "Präsentationsmedium: Tafel/Whiteboard",
+                "Nachteile Tafel/Whiteboard:  unleserliche Schrift zeitgleich reden und schreiben Blickkontakt halten" +
+                    " beim Schreiben schwierig",
+                "Wovon hängt die Medienwahl ab?  Thema Raum Teilnehmer Medien Präsentierender Unterlagen"
+            ];
+        }
+        
+        function initActionCardsReal() {
+            action_cards_real = JSON.parse('[' +
+                '{"text": "Du hast vergessen die Gliederung deiner Abschluss- präsentation rechtzeitig abzugeben.' +
+                ' Gehe zwei Schritte zurück und ziehe eine Wissenskarte.",' +
+                ' "action": -2, "card": 0},' +
+                '{"text":"Du hast früh genug angefangen dir Gedanken über den Aufbau deiner Abschlusspräsentation ' +
+                'zu machen.' +
+                ' Gehe drei Schritte vor.",' +
+                ' "action": 3, "card": 0},' +
+                '{"text":"Du probst deine Abschlusspräsentation nicht.' +
+                ' Gehe einen Schritt zurück ' +
+                'und ziehe eine Wissenskarte.", ' +
+                '"action": -1, "card": 1},' +
+                '{"text":"Du bist dir nicht ganz sicher, ob der rote Faden in deiner Präsentation zu erkennen ist.' +
+                ' Deshalb hältst du die Präsentation vor ein paar Freunden.' +
+                ' Gehe zwei Schritte vor.",' +
+                ' "action": 2, "card": 0},' +
+                '{"text":"Mit deiner Abschlusspräsentation fängst du erst am Abend vor dem Termin an. ' +
+                'Gehe drei Schritte zurück und ziehe eine Wissenskarte.",' +
+                ' "action": -3, "card": 1},' +
+                '{"text":"Du hast früh genug damit angefangen für die Klausuren zu lernen.' +
+                ' Gehe drei Schritte vor.",' +
+                ' "action": 3, "card": 0},' +
+                '{"text":"Du hast erst am Abend vor der Klausur angefangen zu lernen. ' +
+                'Gehe drei Schritte zurück und ziehe eine Wissenskarte.", "action": -3, "card": 1},' +
+                '{"text":"Du hast vergessen dich zu einer Klausur anzumelden.' +
+                ' Gehe zurück zum Start und ziehe eine Wissenskarte.",' +
+                ' "action": -100, "card": 1},' +
+                '{"text":"Du verbringst den Vormittag lieber mit Lernen statt mit Ausschlafen. ' +
+                'Gehe zwei Schritte vor.",' +
+                ' "action": 2, "card": 0},' +
+                '{"text":"Du schläfst lieber aus, anstelle zu lernen. ' +
+                'Gehe zwei Schritte zurück und ziehe eine Wissenskarte.",' +
+                ' "action": -2, "card": 1},' +
+                '{"text":"Du vergisst deine Lernsachen in der Bib. ' +
+                'Gehe einen Schritt zurück und ziehe eine Wissenskarte.",' +
+                ' "action": -1, "card": 1},' +
+                '{"text":"Du suchst dir rechtzeitig eine Lerngruppe, die du alle zwei Tage triffst. ' +
+                'Gehe drei Schritte vor.",' +
+                ' "action": 3, "card": 0},' +
+                '{"text":"Deine Karteikarten sind drei Wochen vor der Klausur fertig.' +
+                ' Gehe einen Schritt vor",' +
+                ' "action": 1, "card": 0},' +
+                '{"text":"Du planst lieber die Party nach deiner Abschlusspräsentation statt' +
+                ' für die Abschusspräsentation vorzubereiten.' +
+                ' Gehe zwei Schritte zurück und ziehe eine Wissenskarte.",' +
+                ' "action": -2, "card": 1},' +
+                '{"text":"Du hast während der Vorlesungszeit immer alle Übungsblätter behandelt.' +
+                ' Gehe zwei Schritte vor.",' +
+                ' "action": 2, "card": 0},' +
+                '{"text":"Bei den Proben deiner Präsentation wirst du immer besser und besser.' +
+                ' Gehe einen Schritt vor.",' +
+                ' "action": 1, "card": 0},' +
+                '{"text":"Du bist davon überzeugt, dass du deine Präsentation vorher nicht proben musst.' +
+                ' Gehe einen Schritt zurück und ziehe eine Wissenskarte.", ' +
+                '"action": -1, "card": 1},' +
+                '{"text":"Leider hast du bei der Eingrenzung für die Klausur nicht aufgepasst. Dadurch hast du die' +
+                ' falschen Inhalte gelernt.' +
+                ' Gehe zwei Schritte zurück und ziehe eine Wissenskarte.",' +
+                ' "action": -2, "card": 1},' +
+                '{"text":"Du hast passende Bilder in deine Abschlusspräsentation eingebaut.' +
+                ' Gehe einen Schritt vor.",' +
+                ' "action": 1, "card": 0},' +
+                '{"text":"Du machst dir Gedanken über die Anzahl der Folien in deiner Seminarpräsentation.' +
+                ' Gehe einen Schritt vor.",' +
+                ' "action": 1, "card": 0},' +
+                '{"text":"Du fügst ganz willkürlich Folien in deine Abschlusspräsentation ein und ' +
+                'zeigst einige der Folien nur wenige Sekunden lang.' +
+                ' Gehe einen Schritt zurück und ziehe eine Wissenskarte.",' +
+                ' "action": -1, "card": 1},' +
+                '{"text":"Du machst eine Pause und gehst eine Runde joggen.' +
+                ' Gehe einen Schritt vor.",' +
+                ' "action": 1, "card": 0},' +
+                '{"text":"Du machst eine Pause und zockst drei Stunden lang Computerspiele.' +
+                ' Danach lohnt sich das Lernen auch nicht mehr.' +
+                ' Gehe zwei Schritte zurück und ziehe eine Wissenskarte.",' +
+                ' "action": -2, "card": 1},' +
+                '{"text":"Deine Abschlusspräsentation ist eine Woche vorher fertig.' +
+                ' Du hast genug Zeit sie Korrekturlesen zu lassen.' +
+                ' Gehe einen Schritt vor.", "action": 1, "card": 0},' +
+                '{"text":"Du kommst ausgeschlafen und ausgeruht zur Abschlusspräsentation. ' +
+                'Gehe einen Schritt vor.", "action": 1, "card": 0},' +
+                '{"text":"Am Abend vor der Abschlusspräsentation gehst du in die ' +
+                'Mitternachtspremiere des neuen Star Wars Films. ' +
+                'Gehe einen Schritt zurück und ziehe eine Wissenskarte.",' +
+                ' "action": -1, "card": 1}' +
+                ']');
+        }
+
+        function initActionCardsFictitious() {
+            action_cards_fictitious = JSON.parse('[' +
+                '{"text":"Die restlichen Badanklas lachen dich hinter deinem Rücken für deine Präsentationen aus.' +
+                ' Gehe zwei Schritte zurück und ziehe eine Wissenskarte",' +
+                ' "action": -2, "card": 1},' +
+                '{"text":"Die Präsentation lässt du von deinem Badankla-Azubi erstellen und probst sie vorher nicht.' +
+                ' Gehe zwei Schritte zurück und ziehe eine Wissenskarte.",' +
+                ' "action": -2, "card": 1},' +
+                '{"text":"Du engagierst einen Privatlehrer, der mit dir das Präsentieren übt. ' +
+                'Gehe drei Schritte vor.", ' +
+                '"action": 3, "card": 0},' +
+                '{"text":"Bei einem wichtigen Fernsehauftritt, wo öffentlich eure Ideen vorgestellt werden,' +
+                ' kannst du das Ziel deiner Präsentation nicht klar darstellen. Die Zuschauer sind verwirrt.' +
+                ' Gehe einen Schritt zurück und ziehe eine Wissenskarte.", "action": -1, "card": 1},' +
+                '{"text":"Der rote Faden ist in deiner Präsentation nicht erkennbar. ' +
+                'Gehe einen Schritt zurück und ziehe eine Wissenskarte.",' +
+                ' "action": -1, "card": 1},' +
+                '{"text":"Dem Rat der großen Bedinklos wird nicht klar, warum du die Münzen benötigst.' +
+                ' Gehe einen Schritt zurück und ziehe eine Wissenskarte.", "action": -1, "card": 1},' +
+                '{"text":"Du probst die Präsentation vor deinen Badankla-Freunden und ' +
+                'nimmst Verbesserungsvorschläge entgegen.' +
+                ' Gehe zwei Schritte vor.",' +
+                ' "action": 2, "card": 0},' +
+                '{"text":"Du untermauerst deine Argumente mit aussagekräftigen Bildern.' +
+                ' Gehe einen Schritt vor.",' +
+                ' "action": 1, "card": 0},' +
+                '{"text":"Du gehst im Vorfeld schon mögliche Fragen des Rats der großen Bedinklos durch, ' +
+                'damit du besser darauf vorbereitet bist. Gehe zwei Schritte vor.",' +
+                ' "action": 2, "card": 0},' +
+                '{"text":"Weil du die Präsentation so lange vor der hergeschoben hast,' +
+                ' hast du jetzt keine Zeit mehr mit aktuellen Zahlen zu arbeiten. ' +
+                'Stattdessen musst du veraltete Werte zur Lage aus Bidinkli verwenden. ' +
+                'Gehe zwei Schritte zurück und ziehe eine Wissenskarte.",' +
+                ' "action": -2, "card": 1},' +
+                '{"text":"Die Verbesserungsvorschläge deiner Badankla-Freunde akzeptierst du nicht.' +
+                ' Gehe einen Schritt zurück und ziehe eine Wissenskarte.",' +
+                ' "action": -1, "card": 1},' +
+                '{"text":"Du wählst das Flipchart als Präsentationsmedium. ' +
+                'Leider hast du vergessen, dass in dem Raum 150 Teilnehmer sitzen. Nur die Teilnehmer ' +
+                'aus den vorderen Reihen können erahnen, was auf dem Flipchart steht.' +
+                ' Gehe einen Schritt zurück und ziehe eine Wissenskarte.", "action": -1, "card": 1},' +
+                '{"text":"Statt deine Präsentation zu üben, gehst du lieber mit einem Geschäftsmann-Badankla essen.' +
+                ' Gehe einen Schritt zurück und ziehe eine Wissenskarte.", "action": -1, "card": 1},' +
+                '{"text":"Statt deine Präsentation zu üben, überlegst du dir schon jetzt,' +
+                ' wie du die positive Nachricht den Badanklas mitteilen wirst, ' +
+                'damit deine Wahl in den Rat der großen Bedinklos gesichert ist. ' +
+                'Gehe zwei Schritte zurück und ziehe eine Wissenskarte.", "action": -2, "card": 1},' +
+                '{"text":"Die Argumente deiner Präsentation bauen aufeinander auf und sind schlüssig. ' +
+                'Gehe zwei Schritte vor.",' +
+                ' "action": 2, "card": 0},' +
+                '{"text":"Weil du dich siegessicher fühlst, probst du deine Präsentation nicht. ' +
+                'Gehe einen Schritt zurück und ziehe eine Wissenskarte.", "action": -1, "card": 1},' +
+                '{"text":"Du glaubst nicht daran, dass du mit einer guten Präsentation die Münzen tatsächlich bekommen' +
+                ' könntest, daher gibst du dir auch keine Mühe.' +
+                ' Gehe einen Schritt zurück und ziehe eine Wissenskarte.",' +
+                ' "action": -1, "card": 1},' +
+                '{"text":"Du hast gehört, dass sich die anderen Badanklas seit Wochen auf ' +
+                'ihre Präsentation vorbereiten. Du selbst hast immer noch nicht angefangen,' +
+                ' obwohl es in zwei Tagen soweit ist.' +
+                ' Gehe einen Schritt zurück und ziehe eine Wissenskarte.", "action": -1, "card": 1},' +
+                '{"text":"Deine Badankla-Freunde sagen zu dir, dass du immer besser und besser präsentierst.' +
+                ' Gehe zwei Schritte vor.",' +
+                ' "action": 2, "card": 0},' +
+                '{"text":"Du bist überzeugt davon, dass du mit einer guten Präsentation ' +
+                'die wichtigen Münzen bekommen wirst. Deshalb gibst du dir sehr viel Mühe.' +
+                ' Gehe einen Schritt vor.", "action": 1, "card": 0},' +
+                '{"text":"Du weißt, dass du einen Presenter benötigst, vergisst ihn aber.' +
+                ' Gehe einen Schritt zurück und ziehe eine Wissenskarte.",' +
+                ' "action": -1, "card": 1},' +
+                '{"text":"In deiner Recherche prüfst du, welche Badanklas in den vorherigen Jahren Münzgelder ' +
+                'bekommen haben und warum.' +
+                ' Gehe einen Schritt vor.",' +
+                ' "action": 1, "card": 0},' +
+                '{"text":"Je öfter du deine Präsentation übst, desto besser und selbstsicherer wirst du.' +
+                ' Gehe einen Schritt vor.", "action": 1, "card": 0},' +
+                '{"text":"Du hast Bilder in deiner Präsentation, die thematisch nicht passen. ' +
+                'Gehe einen Schritt zurück und ziehe eine Wissenskarte.", "action": -1, "card": 1},' +
+                '{"text":"Du hast versehentlich deine Präsentation gelöscht und hattest sie nicht woanders gespeichert.' +
+                ' Gehe zurück zum Start.",' +
+                ' "action": -100, "card": 0}' +
+                ']');
+        }
+        
+        /** Draw an image related to last printed image position
+         *
+         * @param game Game to print on
+         * @param mode Direction of line and related new position direction
+         * @param image Image to print
+         */
+        function print_field(game, mode, image) {
+            let old_x = var_print_x;
+            let old_y = var_print_y;
+
+            const y_bias_below = 32;
+            const y_bias_above = 35;
+            const x_bias_left = 35;
+            const x_bias_right = 33;
+            const circle_distance = 100;
+
+            switch (mode) {
+                case 'below':
+                    var_print_y += circle_distance;
+                    old_y += y_bias_below;
+                    break;
+                case 'above':
+                    var_print_y -= circle_distance;
+                    old_y -= y_bias_above;
+                    break;
+                case 'left':
+                    var_print_x -= circle_distance;
+                    old_x -= x_bias_left;
+                    break;
+                case 'right':
+                    var_print_x += circle_distance;
+                    old_x += x_bias_right;
+                    break;
+                default:
+                    break;
+            }
+            draw_line(game, old_x, old_y, var_print_x, var_print_y);
+            game.add.image(var_print_x, var_print_y, image);
+        }
+
+        /** Drawing a line from point A to point B
+         *
+         * @param game Game to print on
+         * @param x1 1st point x position
+         * @param y1 1st point y position
+         * @param x2 2nd point x position
+         * @param y2 2nd point y position
+         */
+        function draw_line(game, x1, y1, x2, y2) {
+            let bias = 3;
+            var graphics = game.add.graphics({ lineStyle: { width: 2, color: 0x000000 } });
+            var line = new Phaser.Geom.Line(x1 - bias, y1, x2 - bias , y2);
+            graphics.strokeLineShape(line);
+        }
+
+        let roll = false;
+        async function  roll_the_dice() {
+            if (!ready || roll || waitForAction)  return;
+            let number = 0;
+            document.getElementById('cube_numberfield').innerText = number;
+            roll = true;
+            while (roll) {
+                number += 1;
+                if (number === 7) {
+                    number = 1;
+                }
+                document.getElementById('cube_numberfield').innerText = number;
+                await Sleep(10);
+
+            }
+        }
+
+        function  stop_the_dice() {
+            //TODO: Random, time based, stop the dice
+            if (roll || waitForAction) {
+                roll = false;
+                steps = parseInt(document.getElementById('cube_numberfield').innerText);
+                field_nr += 1;
+            }
+        }
+
+        var stop_value_x;
+        var stop_value_y;
+
+        function update() {
+            //TODO: Update method with game logic
+            //Select stop values with field nr
+            //if (field_nr === -1) return;
+            if (steps !== 0) {
+                move();
+            }
+        }
+
+        //TODO: Bug Reset to start, wrong way!
+        //TODO: Bug Go multiple fields
+        //TODO: Bug False way
+        //TODO: Bug false number of steps
+        let waitForAction = false;
+        function move() {
+            console.log('move');
+            if (waitForAction) return;
+            console.log('steps: ' + steps);
+            console.log('FNR: ' + field_nr);
+            ready = false;
+
+
+
+            if (field_nr < 0) {
+                field_nr = 0;
+            }
+
+
+            let pos_tuppel = calculateNewField(field_nr);
+            stop_value_x = pos_tuppel.pos_x;
+            stop_value_y = pos_tuppel.pos_y;
+            const SPEED = 5;
+
+            console.log(player1.x, player1.y, stop_value_x, stop_value_y);
+            //TODO: Change to current player
+            let direction = calculateDirection(player1.x, player1.y, stop_value_x, stop_value_y);
+            switch (direction) {
+                case 'up':
+                    if (player1.y !== stop_value_y) {
+                        player1.y -= SPEED;
+                        checkLastMove(player1.y, stop_value_y);
+                    }
+                    break;
+                case 'down':
+                    if (player1.y !== stop_value_y) {
+                        player1.y += SPEED;
+                        checkLastMove(player1.y, stop_value_y);
+                    }
+                    break;
+                case 'left':
+                    if (player1.x !== stop_value_x) {
+                        player1.x -= SPEED;
+                        checkLastMove(player1.x, stop_value_x);
+                    }
+                    break;
+                case 'right':
+                    if (player1.x !== stop_value_x) {
+                        player1.x += SPEED;
+                        checkLastMove(player1.x, stop_value_x);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        function checkLastMove(value1, value2) {
+            //if last move
+            if (value1 === value2) {
+                if (field_nr === 0) {
+                    steps = 0;
+                }
+                //Reset Shift variables
+                active_x_shift = false;
+                active_y_shift = false;
+
+                // Are steps left?
+                if (steps > 0) {
+                    steps--;
+                    if (steps > 0) field_nr++;
+                } else if (steps < 0) {
+                    steps++;
+                    if (steps < 0) field_nr--;
+                }
+                if (steps === 0) {
+                    setImageAndText();
+                    ready = true;
+                }
+
+            }
+        }
+
+        let currentActionCard;
+
+        async function setImageAndText() {
+
+
+            let type = gamefield_types[field_nr];
+            switch (type) {
+                case -1:
+                    break;
+                case 0:
+                    //Ignore action when reaching field with card action
+                    if (ignoreAction) {
+                        ignoreAction = false;
+                        break;
+                    }
+
+                    // Reset card and text
+                    document.getElementById(CARD_ID).src = empty_field_gif;
+                    document.getElementById(CARD_LABEL_ID).innerText = EMPTY_FIELD_TEXT;
+                    document.getElementById(CARD_TEXT_ID).innerText = '';
+                    break;
+                case 1:
+                    //Ignore action when reaching field with card action
+                    if (ignoreAction) {
+                        ignoreAction = false;
+                        break;
+                    }
+
+                    // Set card and text to knowledge theme
+                    // Choose random knowledge phrase
+                    document.getElementById(CARD_ID).src = lamp_gif;
+                    document.getElementById(CARD_LABEL_ID).innerText = LAMP_FIELD_TEXT;
+                    document.getElementById(CARD_TEXT_ID).innerText = getKnowledgeText();
+
+                    break;
+                case 2:
+                    //Ignore action when reaching field with card action
+                    if (ignoreAction) {
+                        ignoreAction = false;
+                        break;
+                    }
+                    document.getElementById(CARD_ID).src = explosion_gif;
+                    document.getElementById(CARD_LABEL_ID).innerText = ACTION_FIELD_TEXT;
+                    let action_card = getActionText();
+                    document.getElementById(CARD_TEXT_ID).innerText = action_card.text;
+                    console.log(action_card.text);
+                    console.log(action_card.action);
+                    console.log(action_card.card);
+                    //TODO: wait until click to execute action
+                    //TODO: IDee: Alle Buttons ausblenden. Fläche über dem Bild einblenden mit dem Titel Klick oder so
+                    //Auf dem Klick Zug ausführen
+                    document.getElementById('card_image_overlay').hidden = false;
+                    document.getElementById('image_div').style.zIndex = "3";
+                    document.getElementById('image_div').style.opacity = "0.5";
+
+                    waitForAction = true;
+                    currentActionCard = action_card;
+
+                    break;
+                case 3:
+                    document.getElementById(CARD_ID).src = winner_gif;
+                    document.getElementById(CARD_LABEL_ID).innerText = WINNER_FIELD_TEXT;
+                    document.getElementById(CARD_TEXT_ID).innerText = '';
+
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        function getKnowledgeText() {
+            let random_nr = Math.floor(Math.random() * knowledge_cards.length);
+            return knowledge_cards[random_nr];
+        }
+
+        //TODO: global setting of story type
+        let story_type = 'real';
+        function getActionText() {
+            let text;
+            if (story_type === 'real') {
+                let random_nr = Math.floor(Math.random() * action_cards_real.length);
+                text = action_cards_real[random_nr];
+            } else {
+                //Story is fictitious
+                let random_nr = Math.floor(Math.random() * action_cards_fictitious.length);
+                text = action_cards_fictitious[random_nr];
+            }
+            return text
+        }
+
+        function calculateNewField(field_nr) {
+            return gamefield_positions[field_nr];
+        }
+
+        //Vars to execute a full move and then reevaluate the direction of the movement
+        let active_y_shift = false;
+        let active_x_shift = false;
+        function calculateDirection(pos_x, pos_y, stop_value_x, stop_value_y) {
+            let diff_x = Math.abs(pos_x - stop_value_x);
+            let diff_y = Math.abs(pos_y - stop_value_y);
+
+            if (active_y_shift) return check_Y_Shift(pos_y, stop_value_y);
+            if (active_x_shift) return check_X_Shift(pos_x, stop_value_x);
+
+            if (diff_x >= diff_y) {
+                active_x_shift = true;
+                return check_X_Shift(pos_x, stop_value_x);
+            } else if (diff_x < diff_y) {
+                active_y_shift = true;
+                return check_Y_Shift(pos_y, stop_value_y);
+
+            }
+            return 'no action';
+        }
+
+        function check_X_Shift(pos_x, stop_value_x) {
+            if (pos_x > stop_value_x) {
+                return 'left';
+            } else if (pos_x < stop_value_x) {
+                return 'right';
+            }
+
+            return 'no action';
+        }
+
+        function check_Y_Shift(pos_y, stop_value_y) {
+            if (pos_y > stop_value_y) {
+                return 'up';
+            } else if (pos_y < stop_value_y) {
+                return 'down';
+            }
+
+            return 'no action';
+        }
+
+        function Sleep(milliseconds) {
+            return new Promise(resolve => setTimeout(resolve, milliseconds));
+        }
+
+        //TODO: Char classes for each players
+        class Character {
+
+            constructor(game, field_nr) {
+                this.game = game;
+                this.field_nr = field_nr
+            }
+
+        }
+
+        //Var that the fields action of the next move is ignored
+        let ignoreAction = false;
+        function executeCardAction(action_card) {
+            steps = action_card.action;
+
+            //Go forward card
+            if (steps > 0) field_nr++;
+            //Go back card
+            if (steps < 0) field_nr--;
+
+            //New science card
+            if (action_card.card === 1) {
+                document.getElementById(CARD_TEXT_ID).innerText = getKnowledgeText();
+                document.getElementById(CARD_ID).src = LAMP_FIELD_TEXT;
+            }
+
+            ignoreAction = true;
+            waitForAction= false;
+            document.getElementById('card_image_overlay').hidden = true;
+            document.getElementById('image_div').style.zIndex = "5";
+            document.getElementById('image_div').style.opacity = "1";
+        }
+
+        function backToStart() {
+            steps = -100;
+            field_nr--;
+        }
+
+    </script>
+
+</body>
+</html>
