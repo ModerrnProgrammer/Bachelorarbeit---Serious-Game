@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="stylesheets/start_style.css">
+
+    <title>A Serious Game - Select story</title>
+</head>
+<body>
+
+<div id="content">
+    <div id="images_div">
+        <p id="select_story_p">Please select your type of story</p>
+        <span id="real_story_outer_span" onclick="loadGame('real')">
+            <label class="story_desc_label">Real Story</label>
+            <br>
+            <img class="story_selection_image" src="./images/students.png" alt="Real story image">
+        </span>
+
+        <span id="fictitious_story_outer_span" onclick="loadGame('fictitious')">
+
+            <label class="story_desc_label">Fictitious Story</label>
+            <br>
+            <img class="story_selection_image" src="./images/Badankla.jpg" alt="Fictitious story image">
+        </span>
+    </div>
+
+    <script>
+
+        function loadGame(gametype) {
+            alert(gametype)
+        }
+    </script>
+</div>
+</body>
+</html>
