@@ -95,7 +95,7 @@
         // List of all Action cards - fictitious story
         let action_cards_fictitious;
         // current card set length
-        let card_set_length
+        let card_set_length = 0;
         //public var for steps to go
         let steps = 0;
         //public print x and y values
@@ -103,9 +103,11 @@
         var_print_y = 250;
         //game is busy like moving
         let ready = true;
+        //game story type
+        let story_type = '';
 
 
-        //constants
+        //Constants
         const CARD_ID = 'card_image';
         const CARD_LABEL_ID = 'card_bottom_label';
         const CARD_TEXT_ID = 'card_text';
@@ -135,6 +137,9 @@
                 this.load.image('start', './images/start_field.png');
                 this.load.image('goal', './images/goal_field.png');
                 this.load.image('empty', './images/empty_field.png');
+
+                //Load params
+                loadParameters();
             } catch (e) {
                 alert('Cant load an image');
                 console.log('ERROR on image loading');
@@ -175,15 +180,15 @@
 
         }
 
-
+        //Player variables
         let currentPlayer;
-        let currentPlayerPos = 0;
+        let currentPlayerPos = -1;
         let character_1;
         let character_2;
         let character_3;
         let character_4;
         let playerList;
-        //TODO: No overlapping
+        //TODO: Dynamic?
         function createGameCharacters(player1, player2) {
             character_1 = new Character("Moritz", player1, 0);
             character_2 = new Character("AI", player2, 0);
@@ -191,7 +196,10 @@
         }
 
         function nextPlayer() {
-            //TODO: Random first player
+            //Random player starts the game
+            if (currentPlayerPos === -1)
+                currentPlayerPos = parseInt(Math.random() * playerList.length, 10);
+
             currentPlayerPos++;
             if (currentPlayerPos >= playerList.length) {
                 currentPlayerPos = 0;
@@ -626,7 +634,6 @@
         }
 
         function  stop_the_dice() {
-            //TODO: Random, time based, stop the dice
             if (roll || waitForAction) {
                 roll = false;
                 steps = parseInt(document.getElementById('cube_numberfield').innerText);
@@ -644,7 +651,7 @@
             }
         }
 
-
+        //TODO: No overlapping
         let waitForAction = false;
         function move() {
             //console.log('move');
@@ -736,10 +743,17 @@
             }
         }
 
+        //TODO: Game end when there is just one player
         function checkWin() {
             if (gamefield_types[currentPlayer.field_nr] === 3) {
-                alert('Winner!');
-                //TODO: Remove player from Player Pool
+
+                //Remove player from Player Pool
+                for (let i = 0; i < playerList.length; i++) {
+                    if (currentPlayer === playerList[i]) {
+                        playerList.splice(i, 1);
+                    }
+                }
+                console.log('Test remove player on win:', playerList);
             }
         }
 
@@ -816,8 +830,8 @@
             return knowledge_cards[random_nr];
         }
 
-        //TODO: global setting of story type
-        let story_type = 'real';
+
+
         function getActionText() {
             let text;
             if (story_type === 'real') {
@@ -912,6 +926,10 @@
             currentPlayer.field_nr++;
         }
 
+        function loadParameters() {
+            let url = new URL(window.location.href);
+            story_type = url.searchParams.get("type");
+        }
     </script>
 
 </body>
