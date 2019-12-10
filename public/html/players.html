@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Characters</title>
+    <link rel="stylesheet" type="text/css" href="stylesheets/players_style.css">
+
+    <script>
+        let selected_char = "";
+        let players_list = [];
+
+        function nextPlayer() {
+            alert('TODO');
+            //TODO: Add player
+            let name = document.getElementById('new_player_name_textarea').value;
+            players_list.push("" + players_list.length + ":{'name':'" + name + "', 'image':'" + selected_char + "'}");
+            console.log(players_list);
+        }
+
+        function startGame() {
+            //TODO: Game Params
+            //TODO: Player Params
+            window.href.location = 'http://localhost/game'
+        }
+
+        function selectImage(image, color) {
+            document.getElementById('img_div_1').style.background = "lightskyblue";
+            document.getElementById('img_div_2').style.background = "lightskyblue";
+            document.getElementById('img_div_3').style.background = "lightskyblue";
+            document.getElementById('img_div_4').style.background = "lightskyblue";
+            document.getElementById(image.id).style.background = "#f00";
+            selected_char = image.id;
+
+        }
+    </script>
+</head>
+<body>
+
+<div id="content">
+    <div id="headline_div">
+        <label id="players_headline">Spieler erstellen</label>
+    </div>
+    <div id="new_player_div">
+        <label id="new_player_name_label">Name: </label>
+        <textarea id="new_player_name_textarea"></textarea>
+    </div>
+    <div id="new_char_div">
+        <div class="icon" id="img_div_1" onclick="selectImage(this);">
+            <img class="choose_players_char"src="./images/red_left.png">
+        </div>
+        <div class="icon" id="img_div_2" onclick="selectImage(this);">
+            <img class="choose_players_char" src="./images/blue_left.png">
+        </div>
+        <div class="icon" id="img_div_3" onclick="selectImage(this);">
+            <img class="choose_players_char" src="./images/yellow_left.png">
+        </div>
+        <div class="icon" id="img_div_4" onclick="selectImage(this);">
+            <img class="choose_players_char" src="./images/pink_left.png">
+        </div>
+
+    </div>
+    <div id="player_buttons">
+        <button class="player_button" id="btn_next_player" onclick="nextPlayer()">Nächster Spieler</button>
+        <button class="player_button" id="btn_start_game" onclick="startGame()">Zum Spiel</button>
+    </div>
+
+</div>
+</body>
+</html>

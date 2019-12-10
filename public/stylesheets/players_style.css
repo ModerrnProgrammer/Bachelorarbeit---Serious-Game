@@ -1,0 +1,78 @@
+#content {
+    background-color: #00B7FF;
+    margin-left: 20%;
+    margin-right: 20%;
+    margin-top: 10%;
+    border-style: dotted;
+    height: 80%;
+}
+
+.player_button {
+    font-size: 2rem;
+    width: 50%;
+    height: 3rem;
+}
+
+#new_player_name_label, #new_player_name_textarea {
+    font-size: 3rem;
+}
+
+
+#new_player_name_textarea {
+    text-align: center;
+    height: 60px;
+}
+
+
+img {
+    width: 50px;
+    height: 50px;
+}
+
+#players_headline {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 3rem;
+}
+
+#new_player_div {
+    margin: 50px;
+    background-color: lightskyblue;
+    text-align: center;
+}
+
+#new_char_div {
+    background-color: lightskyblue;
+    margin: 25px 50px 50px;
+    text-align: center;
+}
+
+#new_player_div {
+    padding: 5px;
+    text-align: center;
+
+}
+
+#btn_start_game {
+    float: right;
+}
+
+#player_buttons {
+    height: 25%;
+    float: bottom;
+    margin: 10px;
+}
+
+#img_div_1:hover, #img_div_2:hover, #img_div_3:hover, #img_div_4:hover {
+    border-style: solid;
+    background-color: red;
+}
+
+#img_div_1, #img_div_2, #img_div_3, #img_div_4 {
+    background-color: lightskyblue;
+    border-style: none;
+}
+
+
+
