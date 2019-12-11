@@ -17,9 +17,18 @@
                     alert('Please select a character!');
                     return;
                 }
+
+                let name = document.getElementById('new_player_name_textarea').value;
+
+                //Check if there is a char selected
+                if (name === '') {
+                    alert('Name can not be empty!');
+                    return;
+                }
+
+
                 //Check if name is already chosen
                 let i = 0;
-                let name = document.getElementById('new_player_name_textarea').value;
 
                 for(i in players_name_list) {
                     console.log(i, name);
