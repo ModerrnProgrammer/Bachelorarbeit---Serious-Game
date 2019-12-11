@@ -13,11 +13,11 @@ a {
 }
 #cube_div {
     width: 200px;
-    height: 600px;
+    height: 640px;
     position: absolute;
     left: 1650px;
     top: 120px;
-    background-color: gray;
+    background-color: lightskyblue;
     padding: 50px;
 }
 
@@ -56,16 +56,12 @@ label {
 }
 
 #card_text {
-    font-size: large;
+    font-size: 1rem;
 }
-
-
-
-
 
 #card_div {
     width: 300px;
-    height: 680px;
+    height: 720px;
     position: absolute;
     top: 120px;
     bottom: 0;
@@ -76,7 +72,7 @@ label {
 #image_div {
     position: absolute;
     left: 35px;
-    top: 275px;
+    top: 315px;
     z-index: 5;
 }
 
@@ -87,16 +83,15 @@ label {
 }
 
 #card_image_overlay_label {
+    position: absolute;
+    left: 35px;
+    top: 315px;
     display: block;
-    width: 215px;
-    height: 365px;
-    font-size: 80px;
-    border-color: white;
-    margin-top: 195px;
-    margin-left: 25px;
+    font-size: 70px;
     padding: 15px;
     color: black;
     text-align: center;
+    border-style: none;
 }
 
 
@@ -109,7 +104,7 @@ label {
 #card_div {
     z-index: 1;
     padding: 10px;
-    background-color: gray;
+    background-color: lightskyblue;
     text-align: center;
 }
 
@@ -117,6 +112,11 @@ label {
     width: 650px;
     position: absolute;
     left: 1300px;
+}
+
+#current_player_name_label {
+
+    background-color: lightskyblue;
 }
 
 
