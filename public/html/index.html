@@ -82,8 +82,7 @@
         let game = new Phaser.Game(config);
 
 
-        //Current field position
-       // let field_nr = 0;
+
         //All game field positions
         let gamefield_positions;
         //game field type list
@@ -106,6 +105,10 @@
         //game story type
         let story_type = '';
 
+        //Player variables
+        let currentPlayer;
+        let currentPlayerPos = -1;
+        let playerList = [];
 
         //Constants
         const CARD_ID = 'card_image';
@@ -138,8 +141,7 @@
                 this.load.image('goal', './images/goal_field.png');
                 this.load.image('empty', './images/empty_field.png');
 
-                //Load params
-                loadParameters();
+
             } catch (e) {
                 alert('Cant load an image');
                 console.log('ERROR on image loading');
@@ -160,9 +162,9 @@
                 generateGameBoard(this);
                 drawCharacters(this);
 
-                let player1 = this.add.sprite(400,400, 'pinki_left');
-                let player2 = this.add.sprite(400,400, 'blue_left');
-                createGameCharacters(player1, player2);
+                //Load params
+                loadParameters(this);
+
                 nextPlayer();
 
             } catch (e) {
@@ -180,20 +182,6 @@
 
         }
 
-        //Player variables
-        let currentPlayer;
-        let currentPlayerPos = -1;
-        let character_1;
-        let character_2;
-        let character_3;
-        let character_4;
-        let playerList;
-        //TODO: Dynamic?
-        function createGameCharacters(player1, player2) {
-            character_1 = new Character("Moritz", player1, 0);
-            character_2 = new Character("AI", player2, 0);
-            playerList = [character_1, character_2];
-        }
 
         function nextPlayer() {
             //Random player starts the game
@@ -204,6 +192,7 @@
             if (currentPlayerPos >= playerList.length) {
                 currentPlayerPos = 0;
             }
+            console.log(playerList);
             currentPlayer = playerList[currentPlayerPos];
             document.getElementById('current_player_name_label').innerText = 'Current player: ' + currentPlayer.name;
 
@@ -678,9 +667,6 @@
             stop_value_y = pos_tuppel.pos_y;
             const SPEED = 10;
 
-
-
-            //TODO: Change to current player
             let direction = calculateDirection(currentPlayer.player.x, currentPlayer.player.y, stop_value_x, stop_value_y);
 
             switch (direction) {
@@ -743,9 +729,12 @@
             }
         }
 
-        //TODO: Game end when there is just one player
+        let winner = '';
         function checkWin() {
             if (gamefield_types[currentPlayer.field_nr] === 3) {
+                if (winner === '') {
+                    winner = currentPlayer.name;
+                }
 
                 //Remove player from Player Pool
                 for (let i = 0; i < playerList.length; i++) {
@@ -753,7 +742,10 @@
                         playerList.splice(i, 1);
                     }
                 }
-                console.log('Test remove player on win:', playerList);
+                //Game is finished when just one last player has not reached the goal
+                if (playerList.length === 1) {
+                    alert('The game is finished! ' + winner + " won the game. Please answer the questions.");
+                }
             }
         }
 
@@ -830,8 +822,6 @@
             return knowledge_cards[random_nr];
         }
 
-
-
         function getActionText() {
             let text;
             if (story_type === 'real') {
@@ -894,8 +884,6 @@
             return new Promise(resolve => setTimeout(resolve, milliseconds));
         }
 
-
-
         //Var that the fields action of the next move is ignored
         let ignoreAction = false;
         function executeCardAction(action_card) {
@@ -926,10 +914,49 @@
             currentPlayer.field_nr++;
         }
 
-        function loadParameters() {
-            let url = new URL(window.location.href);
-            story_type = url.searchParams.get("type");
+        function loadParameters(game) {
+            try {
+                let url = new URL(window.location.href);
+                //Story type
+                story_type = url.searchParams.get("type");
+
+                let player_url_list = [];
+                //Player1
+                let player_url_1 = url.searchParams.get("0");
+                player_url_list.push(player_url_1);
+
+                //Player2
+                let player_url_2 = url.searchParams.get("1");
+                player_url_list.push(player_url_2);
+
+                //Player3
+                let player_url_3 = url.searchParams.get("2");
+                player_url_list.push(player_url_3);
+
+                //Player4
+                let player_url_4 = url.searchParams.get("3");
+                player_url_list.push(player_url_4);
+
+                let i = 0;
+                for (i in player_url_list) {
+                    if (player_url_list[i] != null) {
+                        let json_player = JSON.parse(player_url_list[i]);
+                        playerList.push(createGameCharacters(game, json_player.name, json_player.image));
+                    }
+                }
+
+                console.log(playerList);
+            } catch (e) {
+                console.log(e);
+            }
         }
+
+        function createGameCharacters(game, name, image) {
+            let player = game.add.sprite(400,400, image);
+            return new Character(name, player, 0);
+
+        }
+
     </script>
 
 </body>

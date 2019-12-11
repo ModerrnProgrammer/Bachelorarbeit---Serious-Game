@@ -30,7 +30,7 @@
                     }
 
                 }
-                players_list.push("" + players_list.length + ":{'name':'" + name + "', 'image':'" + selected_char + "'}");
+                players_list.push('{"name":"' + name + '", "image":"' + getImage(selected_char) + '"}');
                 players_name_list.push(name);
                 console.log(players_list);
 
@@ -54,11 +54,12 @@
 
                 var div = document.createElement("div");
 
-                var label = document.createElement("label");
+
+                let label = document.createElement("label");
                 label.innerText = name;
                 label.className = 'mini_player_name';
 
-                var img = document.createElement('img');
+                let img = document.createElement('img');
                 img.src = document.getElementById(selected_char).childNodes[1].src;
                 img.className = 'mini_image';
 
@@ -74,16 +75,14 @@
         }
 
         function startGame() {
-            //TODO: Game Params
-            //TODO: Player Params
-            //TODO: URLencode
             let new_url = 'http://localhost:3000/game';
-
             let old_url = new URL(window.location.href);
-            story_type = url.searchParams.get("type");
 
+            story_type = old_url.searchParams.get("type");
+            const querystring = encodeQueryData(players_list);
 
-            window.location.replace(uri);
+            new_url = new_url + '?type=' + story_type + '&' + querystring;
+            window.location.replace(new_url);
         }
 
         function selectImage(image, color) {
@@ -96,6 +95,24 @@
             selected_char = image.id;
 
         }
+
+        function encodeQueryData(data) {
+            const ret = [];
+            for (let d in data)
+                ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(data[d]));
+            return ret.join('&');
+        }
+
+        function getImage(id) {
+            switch (id) {
+                case 'img_div_1': return 'red_left';
+                case 'img_div_2': return 'blue_left';
+                case 'img_div_3': return 'yellow_left';
+                case 'img_div_4': return 'pink_left';
+                default: return null;
+            }
+        }
+
     </script>
 </head>
 <body>

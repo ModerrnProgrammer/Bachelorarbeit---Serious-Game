@@ -8,13 +8,13 @@
 }
 
 .player_button {
-    font-size: 2rem;
+    font-size: 3rem;
     width: 50%;
-    height: 3rem;
+    height: 4rem;
 }
 
 #new_player_name_p, #new_player_name_textarea {
-    font-size: 3rem;
+    font-size: 4rem;
 }
 
 #new_player_name_p {
@@ -24,7 +24,8 @@
 
 #new_player_name_textarea {
     text-align: center;
-    height: 60px;
+    height: 80px;
+    width: 70%;
 }
 
 
@@ -37,7 +38,7 @@ img {
     display: block;
     width: 100%;
     text-align: center;
-    font-size: 4rem;
+    font-size: 5rem;
     margin-top: 10px;
 }
 
@@ -80,15 +81,17 @@ img {
 }
 
 .mini_image {
-    width: 30px;
-    height: 30px;
-    margin-left: 5px;
-    margin-top: 10px;
+    width: 40px;
+    height: 40px;
 }
 
+
+
 .mini_player_name {
+    display: inline-block;
     font-size: 2rem;
-    width: 200px;
+    text-align: right;
+    width: auto;
 }
 
 #created_players_div {
@@ -97,7 +100,6 @@ img {
     margin: 50px;
     visibility: hidden;
     text-align: center;
-    vertical-align: center;
 }
 
 .choose_players_char {
