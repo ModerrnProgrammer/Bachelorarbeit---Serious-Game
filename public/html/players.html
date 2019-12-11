@@ -67,6 +67,8 @@
                 div.appendChild(img);
 
                 players_div.appendChild(div);
+
+                selected_char = '';
             } catch (e) {
                 console.log(e);
             }
@@ -75,6 +77,12 @@
         }
 
         function startGame() {
+
+            if (players_list.length < 2) {
+                alert('The game requires a minimum of two players');
+                return;
+            }
+
             let new_url = 'http://localhost:3000/game';
             let old_url = new URL(window.location.href);
 

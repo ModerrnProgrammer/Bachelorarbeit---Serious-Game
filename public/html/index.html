@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>Serious Game by Moritz Rohde</title>
     <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -85,23 +86,29 @@
 
         //All game field positions
         let gamefield_positions;
+
         //game field type list
         let gamefield_types;
+
         // List of all Knowledge Cards
         let knowledge_cards;
+
         // List of all Action cards - reality near story
         let action_cards_real;
+
         // List of all Action cards - fictitious story
         let action_cards_fictitious;
-        // current card set length
-        let card_set_length = 0;
+
         //public var for steps to go
         let steps = 0;
+
         //public print x and y values
         var_print_x = 250;
         var_print_y = 250;
+
         //game is busy like moving
         let ready = true;
+
         //game story type
         let story_type = '';
 
@@ -119,7 +126,7 @@
         const LAMP_FIELD_TEXT = 'Knowledge Card!';
         const ACTION_FIELD_TEXT = 'Action Card!';
         const WINNER_FIELD_TEXT = 'YOU ARE THE WINNER';
-
+        const TOO_MANY_STEPS_TEXT = 'You have to finish with a suitable number of steps';
 
         function preload () {
             try {
@@ -149,7 +156,6 @@
         }
 
         function create () {
-            console.log('CREATE');
             this.cameras.main.backgroundColor.setTo(135, 206, 250);
 
             try {
@@ -166,6 +172,7 @@
                 loadParameters(this);
 
                 nextPlayer();
+                checkOverlappingAfter();
 
             } catch (e) {
                 console.error('Error while drawing', e);
@@ -192,10 +199,10 @@
             if (currentPlayerPos >= playerList.length) {
                 currentPlayerPos = 0;
             }
-            console.log(playerList);
+
             currentPlayer = playerList[currentPlayerPos];
             document.getElementById('current_player_name_label').innerText = 'Current player: ' + currentPlayer.name;
-
+            beforeOverlapping = true;
         }
 
         function drawCharacters(game) {
@@ -614,8 +621,7 @@
             }
         }
 
-        let stop_value_x;
-        let stop_value_y;
+
 
         //Game is finished variable
         let end = false;
@@ -624,18 +630,23 @@
             if (end) return;
 
             if (steps !== 0) {
-                move();
+                check_move_states();
             }
         }
 
-        //TODO: No overlapping
         let waitForAction = false;
-        function move() {
-            //console.log('move');
+        let beforeOverlapping = true;
+        function check_move_states() {
+
             if (waitForAction) return;
-            //console.log('steps: ' + steps);
-            //console.log('FNR: ' + currentPlayer.field_nr);
+
+            if (beforeOverlapping) {
+                checkOverlappingBefore();
+                beforeOverlapping = false;
+            }
+
             ready = false;
+
 
 
             //Start field pos check
@@ -644,41 +655,47 @@
             }
 
             if (currentPlayer.field_nr + steps > gamefield_types.length) {
+                document.getElementById('card_text').innerText = TOO_MANY_STEPS_TEXT;
                 ready = true;
                 return;
             }
 
 
 
-            let pos_tuppel = calculateNewField(currentPlayer.field_nr);
-            stop_value_x = pos_tuppel.pos_x;
-            stop_value_y = pos_tuppel.pos_y;
+            let pos_tupel = calculateNewField(currentPlayer.field_nr);
+            let stop_value_x = pos_tupel.pos_x;
+            let stop_value_y = pos_tupel.pos_y;
             const SPEED = 10;
 
             let direction = calculateDirection(currentPlayer.player.x, currentPlayer.player.y, stop_value_x, stop_value_y);
 
+            move(direction, stop_value_x, stop_value_y, SPEED);
+
+        }
+
+        function move(direction, stop_value_x, stop_value_y, speed) {
             switch (direction) {
                 case 'up':
                     if (currentPlayer.player.y !== stop_value_y) {
-                        currentPlayer.player.y -= SPEED;
+                        currentPlayer.player.y -= speed;
                         checkLastMove(currentPlayer.player.y, stop_value_y);
                     }
                     break;
                 case 'down':
                     if (currentPlayer.player.y !== stop_value_y) {
-                        currentPlayer.player.y += SPEED;
+                        currentPlayer.player.y += speed;
                         checkLastMove(currentPlayer.player.y, stop_value_y);
                     }
                     break;
                 case 'left':
                     if (currentPlayer.player.x !== stop_value_x) {
-                        currentPlayer.player.x -= SPEED;
+                        currentPlayer.player.x -= speed;
                         checkLastMove(currentPlayer.player.x, stop_value_x);
                     }
                     break;
                 case 'right':
                     if (currentPlayer.player.x !== stop_value_x) {
-                        currentPlayer.player.x += SPEED;
+                        currentPlayer.player.x += speed;
                         checkLastMove(currentPlayer.player.x, stop_value_x);
                     }
                     break;
@@ -687,8 +704,15 @@
             }
         }
 
+        function checkOverlappingBefore() {
+            console.log('Before');
+            let pos_tupel = calculateNewField(currentPlayer.field_nr - 1);
+            currentPlayer.player.x = pos_tupel.pos_x;
+            currentPlayer.player.y = pos_tupel.pos_y;
+        }
+
         function checkLastMove(value1, value2) {
-            //if last move
+            //if last check_move_states
             if (value1 === value2) {
                 if (currentPlayer.field_nr === 0) {
                     steps = 0;
@@ -707,14 +731,64 @@
                 }
                 if (steps === 0) {
                     checkWin();
+
                     setImageAndText();
+
+
                     if (!waitForAction) {
                         nextPlayer();
                     }
+
+                    checkOverlappingAfter();
+
+
                     ready = true;
                 }
 
             }
+        }
+
+        function checkOverlappingAfter() {
+
+
+            let move_list = [];
+            for(let i = 0; i < playerList.length; i++) {
+                for (let j = 0; j < playerList.length; j++) {
+                    if (i === j) continue;
+                    if (playerList[i].field_nr === playerList[j].field_nr) {
+                        if (!move_list.includes(playerList[i]))
+                            move_list.push(playerList[i]);
+                        if (!move_list.includes(playerList[j]))
+                            move_list.push(playerList[j]);
+                    }
+                }
+            }
+
+
+            let count = 0;
+
+            move_list.forEach( (player) => {
+                let pos_tupel = calculateNewField(player.field_nr);
+                let new_x = pos_tupel.pos_x;
+                let new_y = pos_tupel.pos_y;
+
+                const DIFF = 20;
+                switch (count) {
+                    case 0: new_x -= DIFF;
+                        break;
+                    case 1: new_x += DIFF;
+                        break;
+                    case 2: new_y += DIFF;
+                        break;
+                    case 3: new_y -= DIFF;
+                        break;
+                }
+
+                player.player.x = new_x;
+                player.player.y = new_y;
+                count++;
+            });
+
         }
 
         let winner = '';
@@ -827,7 +901,7 @@
             return gamefield_positions[nr];
         }
 
-        //Vars to execute a full move and then reevaluate the direction of the movement
+        //Vars to execute a full check_move_states and then reevaluate the direction of the movement
         let active_y_shift = false;
         let active_x_shift = false;
         function calculateDirection(pos_x, pos_y, stop_value_x, stop_value_y) {
@@ -872,7 +946,7 @@
             return new Promise(resolve => setTimeout(resolve, milliseconds));
         }
 
-        //Var that the fields action of the next move is ignored
+        //Var that the fields action of the next check_move_states is ignored
         let ignoreAction = false;
         function executeCardAction(action_card) {
             steps = action_card.action;
@@ -898,7 +972,7 @@
         }
 
         function toGoal() {
-            steps = +39;
+            steps = +3;
             currentPlayer.field_nr++;
         }
 
@@ -933,7 +1007,6 @@
                     }
                 }
 
-                console.log(playerList);
             } catch (e) {
                 console.log(e);
             }
