@@ -13,10 +13,14 @@
     height: 3rem;
 }
 
-#new_player_name_label, #new_player_name_textarea {
+#new_player_name_p, #new_player_name_textarea {
     font-size: 3rem;
 }
 
+#new_player_name_p {
+    margin: 5px;
+    width: auto;
+}
 
 #new_player_name_textarea {
     text-align: center;
@@ -33,7 +37,8 @@ img {
     display: block;
     width: 100%;
     text-align: center;
-    font-size: 3rem;
+    font-size: 4rem;
+    margin-top: 10px;
 }
 
 #new_player_div {
@@ -64,15 +69,37 @@ img {
     margin: 10px;
 }
 
-#img_div_1:hover, #img_div_2:hover, #img_div_3:hover, #img_div_4:hover {
+.icon:hover {
     border-style: solid;
     background-color: red;
 }
 
-#img_div_1, #img_div_2, #img_div_3, #img_div_4 {
+.icon {
     background-color: lightskyblue;
     border-style: none;
 }
 
+.mini_image {
+    width: 30px;
+    height: 30px;
+    margin-left: 5px;
+    margin-top: 10px;
+}
 
+.mini_player_name {
+    font-size: 2rem;
+    width: 200px;
+}
 
+#created_players_div {
+    background-color: lightskyblue;
+    border-style: dotted;
+    margin: 50px;
+    visibility: hidden;
+    text-align: center;
+    vertical-align: center;
+}
+
+.choose_players_char {
+    margin-top: 5px;
+}

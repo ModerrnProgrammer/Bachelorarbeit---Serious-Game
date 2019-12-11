@@ -8,19 +8,82 @@
     <script>
         let selected_char = "";
         let players_list = [];
+        let players_name_list = [];
 
         function nextPlayer() {
-            alert('TODO');
-            //TODO: Add player
-            let name = document.getElementById('new_player_name_textarea').value;
-            players_list.push("" + players_list.length + ":{'name':'" + name + "', 'image':'" + selected_char + "'}");
-            console.log(players_list);
+            try {
+                //Check if there is a char selected
+                if (selected_char === '') {
+                    alert('Please select a character!');
+                    return;
+                }
+                //Check if name is already chosen
+                let i = 0;
+                let name = document.getElementById('new_player_name_textarea').value;
+
+                for(i in players_name_list) {
+                    console.log(i, name);
+                    if (players_name_list[i] === name) {
+                        alert('Please choose a different name');
+                        document.getElementById('new_player_name_textarea').value = '';
+                        return;
+                    }
+
+                }
+                players_list.push("" + players_list.length + ":{'name':'" + name + "', 'image':'" + selected_char + "'}");
+                players_name_list.push(name);
+                console.log(players_list);
+
+                //Clear fields and add a gray filter
+                document.getElementById('new_player_name_textarea').value = '';
+                document.getElementById(selected_char).style.filter = 'grayscale(0.9)';
+                document.getElementById(selected_char).style.webkitFilter = 'grayscale(0.9)';
+                document.getElementById(selected_char).style.background = "lightskyblue";
+                document.getElementById(selected_char).onclick = '';
+
+                //If max. 4 Players has been selected
+                if (players_name_list.length === 4) {
+                    document.getElementById('btn_start_game').style.background = "#f55";
+                    document.getElementById('new_player_name_textarea').disabled = true;
+                    document.getElementById('btn_next_player').disabled = true;
+                }
+
+                //Add player to interface
+                var players_div = document.getElementById('created_players_div');
+                players_div.style.visibility = 'visible';
+
+                var div = document.createElement("div");
+
+                var label = document.createElement("label");
+                label.innerText = name;
+                label.className = 'mini_player_name';
+
+                var img = document.createElement('img');
+                img.src = document.getElementById(selected_char).childNodes[1].src;
+                img.className = 'mini_image';
+
+                div.appendChild(label);
+                div.appendChild(img);
+
+                players_div.appendChild(div);
+            } catch (e) {
+                console.log(e);
+            }
+
+
         }
 
         function startGame() {
             //TODO: Game Params
             //TODO: Player Params
-            window.href.location = 'http://localhost/game'
+            //TODO: URLencode
+            let new_url = 'http://localhost:3000/game';
+
+            let old_url = new URL(window.location.href);
+            story_type = url.searchParams.get("type");
+
+
+            window.location.replace(uri);
         }
 
         function selectImage(image, color) {
@@ -29,6 +92,7 @@
             document.getElementById('img_div_3').style.background = "lightskyblue";
             document.getElementById('img_div_4').style.background = "lightskyblue";
             document.getElementById(image.id).style.background = "#f00";
+            document.getElementById(image.id).className = '';
             selected_char = image.id;
 
         }
@@ -41,9 +105,14 @@
         <label id="players_headline">Spieler erstellen</label>
     </div>
     <div id="new_player_div">
-        <label id="new_player_name_label">Name: </label>
+        <p id="new_player_name_p">Name: </p>
         <textarea id="new_player_name_textarea"></textarea>
     </div>
+
+    <div id="created_players_div">
+
+    </div>
+
     <div id="new_char_div">
         <div class="icon" id="img_div_1" onclick="selectImage(this);">
             <img class="choose_players_char"src="./images/red_left.png">
