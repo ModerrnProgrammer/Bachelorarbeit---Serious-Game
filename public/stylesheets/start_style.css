@@ -35,9 +35,9 @@ body {
 }
 .story_selection_image {
     background-color: white;
-    margin: 20px;
-    width: 70%;
-    height: 70%;
+    margin: 10%;
+    max-height: 70%;
+    object-fit: cover;
 
 }
 

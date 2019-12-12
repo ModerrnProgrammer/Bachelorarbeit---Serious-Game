@@ -10,6 +10,8 @@
         let players_list = [];
         let players_name_list = [];
 
+
+
         function nextPlayer() {
             try {
                 //Check if there is a char selected
@@ -95,7 +97,7 @@
             let new_url = 'http://localhost:3000/game';
             let old_url = new URL(window.location.href);
 
-            story_type = old_url.searchParams.get("type");
+            let story_type = old_url.searchParams.get("type");
             const querystring = encodeQueryData(players_list);
 
             new_url = new_url + '?type=' + story_type + '&' + querystring;
@@ -120,14 +122,49 @@
             return ret.join('&');
         }
 
+        //TODO: Type
         function getImage(id) {
-            switch (id) {
-                case 'img_div_1': return 'red_left';
-                case 'img_div_2': return 'blue_left';
-                case 'img_div_3': return 'yellow_left';
-                case 'img_div_4': return 'pink_left';
-                default: return null;
+            let url = new URL(window.location.href);
+            story_type = url.searchParams.get("type");
+
+            if (story_type === 'real') {
+                switch (id) {
+                    case 'img_div_1': return 'student_1';
+                    case 'img_div_2': return 'student_2';
+                    case 'img_div_3': return 'student_3';
+                    case 'img_div_4': return 'student_4';
+                    default: return null;
+                }
+            } else {
+                switch (id) {
+                    case 'img_div_1': return 'monster_red';
+                    case 'img_div_2': return 'monster_green';
+                    case 'img_div_3': return 'monster_lightgreen';
+                    case 'img_div_4': return 'monster_purple';
+                    default: return null;
+                }
             }
+
+
+
+        }
+
+        function initImages() {
+            let url = new URL(window.location.href);
+            let story_type = url.searchParams.get("type");
+            console.log('init', story_type)
+            if (story_type === 'real') {
+                document.getElementById('image_1').src = './images/woman_1.png';
+                document.getElementById('image_2').src = './images/man_1.png';
+                document.getElementById('image_3').src = './images/man_2.png';
+                document.getElementById('image_4').src = './images/woman_2.png';
+            } else {
+                document.getElementById('image_1').src = './images/monster_red.png';
+                document.getElementById('image_2').src = './images/monster_lightgreen.png';
+                document.getElementById('image_3').src = './images/monster_green.png';
+                document.getElementById('image_4').src = './images/monster_purple.png';
+            }
+
         }
 
     </script>
@@ -149,16 +186,16 @@
 
     <div id="new_char_div">
         <div class="icon" id="img_div_1" onclick="selectImage(this);">
-            <img class="choose_players_char"src="./images/red_left.png">
+            <img id="image_1" class="choose_players_char" src="./images/red_left.png">
         </div>
         <div class="icon" id="img_div_2" onclick="selectImage(this);">
-            <img class="choose_players_char" src="./images/blue_left.png">
+            <img id="image_2" class="choose_players_char" src="./images/blue_left.png">
         </div>
         <div class="icon" id="img_div_3" onclick="selectImage(this);">
-            <img class="choose_players_char" src="./images/yellow_left.png">
+            <img id="image_3" class="choose_players_char" src="./images/yellow_left.png">
         </div>
         <div class="icon" id="img_div_4" onclick="selectImage(this);">
-            <img class="choose_players_char" src="./images/pink_left.png">
+            <img id="image_4" class="choose_players_char" src="./images/pink_left.png">
         </div>
 
     </div>
@@ -169,4 +206,6 @@
 
 </div>
 </body>
+
+<script>initImages();</script>
 </html>

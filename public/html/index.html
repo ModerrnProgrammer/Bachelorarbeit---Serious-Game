@@ -70,7 +70,7 @@
         };
 
         //Explosion GIF
-        const EXPLOSION_GIF = 'https://media.giphy.com/media/bJaxgozZusl2g/giphy.gif';
+        const EXPLOSION_GIF = 'https://media.giphy.com/media/83lijARg592rC/giphy.gif';
         //Lamp GIF
         const LAMP_GIF = 'https://media.giphy.com/media/l1KVaST85EIicDiLe/giphy.gif';
         //Empty field GIF
@@ -131,7 +131,7 @@
         function preload () {
             try {
 
-                //Load Characters
+                //Load Characters - Pacman
                 this.load.image('pink_left', './images/pink_left.png');
                 this.load.image('pink_right', './images/pink_right.png');
                 this.load.image('red_left', './images/red_left.png');
@@ -140,6 +140,18 @@
                 this.load.image('blue_right', './images/blue_right.png');
                 this.load.image('yellow_left', './images/yellow_left.png');
                 this.load.image('yellow_right', './images/yellow_right.png');
+
+                //Load Characters - Monsters
+                this.load.image('monster_red', './images/monster_red.png');
+                this.load.image('monster_green', './images/monster_green.png');
+                this.load.image('monster_lightgreen', './images/monster_lightgreen.png');
+                this.load.image('monster_purple', './images/monster_purple.png');
+
+                //load Characters - Students
+                this.load.image('student_1', './images/woman_1.png');
+                this.load.image('student_2', './images/man_1.png');
+                this.load.image('student_3', './images/man_2.png');
+                this.load.image('student_4', './images/woman_2.png');
 
                 //Load game fields
                 this.load.image('explode', './images/explode.png');
