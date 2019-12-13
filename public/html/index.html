@@ -78,11 +78,8 @@
         //Winner GIF
         const WINNER_GIF = 'https://media.giphy.com/media/2gtoSIzdrSMFO/giphy.gif';
 
-
         //var objects = {};
         let game = new Phaser.Game(config);
-
-
 
         //All game field positions
         let gamefield_positions;
@@ -130,8 +127,8 @@
 
         function preload () {
             try {
-
                 //Load Characters - Pacman
+                /*
                 this.load.image('pink_left', './images/pink_left.png');
                 this.load.image('pink_right', './images/pink_right.png');
                 this.load.image('red_left', './images/red_left.png');
@@ -140,18 +137,19 @@
                 this.load.image('blue_right', './images/blue_right.png');
                 this.load.image('yellow_left', './images/yellow_left.png');
                 this.load.image('yellow_right', './images/yellow_right.png');
+                */
 
                 //Load Characters - Monsters
-                this.load.image('monster_red', './images/monster_red.png');
-                this.load.image('monster_green', './images/monster_green.png');
-                this.load.image('monster_lightgreen', './images/monster_lightgreen.png');
-                this.load.image('monster_purple', './images/monster_purple.png');
+                this.load.image('monster_red', './images/monster_red_mini.png');
+                this.load.image('monster_green', './images/monster_green_mini.png');
+                this.load.image('monster_lightgreen', './images/monster_lightgreen_mini.png');
+                this.load.image('monster_purple', './images/monster_purple_mini.png');
 
                 //load Characters - Students
-                this.load.image('student_1', './images/woman_1.png');
-                this.load.image('student_2', './images/man_1.png');
-                this.load.image('student_3', './images/man_2.png');
-                this.load.image('student_4', './images/woman_2.png');
+                this.load.image('student_1', './images/woman_mini_1.png');
+                this.load.image('student_2', './images/man_mini_1.png');
+                this.load.image('student_3', './images/man_mini_2.png');
+                this.load.image('student_4', './images/woman_mini_2.png');
 
                 //Load game fields
                 this.load.image('explode', './images/explode.png');
@@ -159,7 +157,6 @@
                 this.load.image('start', './images/start_field.png');
                 this.load.image('goal', './images/goal_field.png');
                 this.load.image('empty', './images/empty_field.png');
-
 
             } catch (e) {
                 alert('Cant load an image');
@@ -178,7 +175,7 @@
                 initActionCardsFictitious();
 
                 generateGameBoard(this);
-                drawCharacters(this);
+                //drawCharacters(this);
 
                 //Load params
                 loadParameters(this);
