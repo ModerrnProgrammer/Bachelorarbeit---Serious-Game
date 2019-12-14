@@ -18,7 +18,7 @@
             </div>
             <button class="my_button" id="cube_roll_button" onclick="roll_the_dice()">START</button>
             <button class="my_button" id="cube_stop_button" onclick="stop_the_dice()">STOP</button>
-            <!--<button class="my_button" id="goal_button" onclick="toGoal()">ZIEL</button>-->
+            <<button class="my_button" id="goal_button" onclick="toGoal()">ZIEL</button>
 
          </div>
 
@@ -69,6 +69,8 @@
             }
         };
 
+        //TODO: Oberfläche, die das Spiel / Die Geschichte erklärt
+        //TODO: Change GIFs
         //Explosion GIF
         const EXPLOSION_GIF = 'https://media.giphy.com/media/83lijARg592rC/giphy.gif';
         //Lamp GIF
@@ -78,6 +80,7 @@
         //Winner GIF
         const WINNER_GIF = 'https://media.giphy.com/media/2gtoSIzdrSMFO/giphy.gif';
 
+        //TODO: Gif for a 2nd and 3nd place
         //var objects = {};
         let game = new Phaser.Game(config);
 
@@ -817,9 +820,7 @@
 
                 //Remove player from Player Pool
 
-                console.log(playerList);
-                console.log('Remove..');
-                //TODO: Leute im Ziel versetzen
+
                 for (let i = 0; i < playerList.length; i++) {
                     if (currentPlayer === playerList[i]) {
                         playerList.splice(i, 1);
