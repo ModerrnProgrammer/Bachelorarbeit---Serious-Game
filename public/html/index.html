@@ -18,7 +18,7 @@
             </div>
             <button class="my_button" id="cube_roll_button" onclick="roll_the_dice()">START</button>
             <button class="my_button" id="cube_stop_button" onclick="stop_the_dice()">STOP</button>
-            <button class="my_button" id="goal_button" onclick="toGoal()">ZIEL</button>
+            <!--<button class="my_button" id="goal_button" onclick="toGoal()">ZIEL</button>-->
 
          </div>
 
@@ -181,7 +181,7 @@
                 loadParameters(this);
 
                 nextPlayer();
-                checkOverlappingAfter();
+                checkOverlappingAfter(25);
 
             } catch (e) {
                 console.error('Error while drawing', e);
@@ -617,7 +617,7 @@
                     number = 1;
                 }
                 document.getElementById('cube_numberfield').innerText = number;
-                await Sleep(25);
+                await Sleep(15);
 
             }
         }
@@ -643,11 +643,26 @@
             }
         }
 
+        //TODO: Testen, wenn man eine Karte mit zu vielen Schritten hat
         let waitForAction = false;
         let beforeOverlapping = true;
         function check_move_states() {
 
             if (waitForAction) return;
+
+            //Würfelzahl ist zu groß, da passend ins Ziel gegangen werden soll
+            if (currentPlayer.field_nr + steps > gamefield_types.length) {
+                console.log(currentPlayer, steps, gamefield_types.length);
+
+                //Reset moving init
+                currentPlayer.field_nr--;
+                steps = 0;
+
+                document.getElementById('card_text').innerText = TOO_MANY_STEPS_TEXT;
+                nextPlayer();
+                ready = true;
+                return;
+            }
 
             if (beforeOverlapping) {
                 checkOverlappingBefore();
@@ -656,20 +671,10 @@
 
             ready = false;
 
-
-
             //Start field pos check
             if (currentPlayer.field_nr < 0) {
                 currentPlayer.field_nr = 0;
             }
-
-            if (currentPlayer.field_nr + steps > gamefield_types.length) {
-                document.getElementById('card_text').innerText = TOO_MANY_STEPS_TEXT;
-                ready = true;
-                return;
-            }
-
-
 
             let pos_tupel = calculateNewField(currentPlayer.field_nr);
             let stop_value_x = pos_tupel.pos_x;
@@ -683,6 +688,7 @@
         }
 
         function move(direction, stop_value_x, stop_value_y, speed) {
+            console.log('Move');
             switch (direction) {
                 case 'up':
                     if (currentPlayer.player.y !== stop_value_y) {
@@ -748,7 +754,7 @@
                         nextPlayer();
                     }
 
-                    checkOverlappingAfter();
+                    checkOverlappingAfter(20);
 
 
                     ready = true;
@@ -757,7 +763,7 @@
             }
         }
 
-        function checkOverlappingAfter() {
+        function checkOverlappingAfter(diff) {
 
 
             let move_list = [];
@@ -776,20 +782,21 @@
 
             let count = 0;
 
+
             move_list.forEach( (player) => {
                 let pos_tupel = calculateNewField(player.field_nr);
                 let new_x = pos_tupel.pos_x;
                 let new_y = pos_tupel.pos_y;
 
-                const DIFF = 20;
+
                 switch (count) {
-                    case 0: new_x -= DIFF;
+                    case 0: new_x -= diff;
                         break;
-                    case 1: new_x += DIFF;
+                    case 1: new_x += diff;
                         break;
-                    case 2: new_y += DIFF;
+                    case 2: new_y += diff;
                         break;
-                    case 3: new_y -= DIFF;
+                    case 3: new_y -= diff;
                         break;
                 }
 
@@ -802,21 +809,53 @@
 
         let winner = '';
         function checkWin() {
+
             if (gamefield_types[currentPlayer.field_nr] === 3) {
                 if (winner === '') {
                     winner = currentPlayer.name;
                 }
 
                 //Remove player from Player Pool
+
+                console.log(playerList);
+                console.log('Remove..');
+                //TODO: Leute im Ziel versetzen
                 for (let i = 0; i < playerList.length; i++) {
                     if (currentPlayer === playerList[i]) {
                         playerList.splice(i, 1);
+                        console.log('Removing', currentPlayer.name);
                     }
                 }
+                console.log(playerList);
+
+                const GOAL_POS_X = 1050;
+                const GOAL_POS_Y = 200;
+                const OFFSET = 30;
+
+                switch (playerList.length) {
+
+                    case 3:
+                        currentPlayer.player.x = GOAL_POS_X - OFFSET;
+                        currentPlayer.player.y = GOAL_POS_Y;
+                        break;
+                    case 2:
+                        currentPlayer.player.x = GOAL_POS_X + OFFSET;
+                        currentPlayer.player.y = GOAL_POS_Y;
+                        break;
+                    case 1:
+                        currentPlayer.player.x = GOAL_POS_X;
+                        currentPlayer.player.y = GOAL_POS_Y - OFFSET;
+                        break;
+                    default:
+                        alert('Spiel muss beendet werden -> ' + playerList.length)
+                }
+
                 //Game is finished when just one last player has not reached the goal
                 if (playerList.length === 1) {
                     end = true;
                     alert('The game is finished! ' + winner + " won the game. Please answer the questions.");
+                    document.getElementById('cube_roll_button').disabled = true;
+                    document.getElementById('cube_stop_button').disabled = true;
                 }
             }
         }
@@ -981,7 +1020,7 @@
         }
 
         function toGoal() {
-            steps = +3;
+            steps = +38;
             currentPlayer.field_nr++;
         }
 
