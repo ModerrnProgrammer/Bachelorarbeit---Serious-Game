@@ -78,7 +78,9 @@
         //Empty field GIF
         const EMPTY_FIELD_GIF = 'https://media.giphy.com/media/l1J9EdzfOSgfyueLm/giphy.gif';
         //Winner GIF
-        const WINNER_GIF = 'https://media.giphy.com/media/2gtoSIzdrSMFO/giphy.gif';
+        const FIRST_IMAGE = './images/first.png';
+        const SECOND_IMAGE = './images/second.png';
+        const THIRD_IMAGE = './images/third.png';
 
         //TODO: Gif for a 2nd and 3nd place
         //var objects = {};
@@ -116,6 +118,7 @@
         let currentPlayer;
         let currentPlayerPos = -1;
         let playerList = [];
+        let winnerList = [];
 
         //Constants
         const CARD_ID = 'card_image';
@@ -125,7 +128,9 @@
         const EMPTY_FIELD_TEXT = 'No card!';
         const LAMP_FIELD_TEXT = 'Knowledge Card!';
         const ACTION_FIELD_TEXT = 'Action Card!';
-        const WINNER_FIELD_TEXT = 'YOU ARE THE WINNER';
+        const FIRST_FIELD_TEXT = 'Du bist Erster!!';
+        const SECOND_FIELD_TEXT = 'DU bist Zweiter';
+        const THIRD_FIELD_TEXT = 'DU bist Dritter';
         const TOO_MANY_STEPS_TEXT = 'You have to finish with a suitable number of steps';
 
         function preload () {
@@ -825,9 +830,9 @@
                     if (currentPlayer === playerList[i]) {
                         playerList.splice(i, 1);
                         console.log('Removing', currentPlayer.name);
+                        winnerList.push(currentPlayer);
                     }
                 }
-                console.log(playerList);
 
                 const GOAL_POS_X = 1050;
                 const GOAL_POS_Y = 200;
@@ -848,7 +853,7 @@
                         currentPlayer.player.y = GOAL_POS_Y - OFFSET;
                         break;
                     default:
-                        alert('Spiel muss beendet werden -> ' + playerList.length)
+                        alert('ERROR');
                 }
 
                 //Game is finished when just one last player has not reached the goal
@@ -894,7 +899,6 @@
                     document.getElementById(CARD_ID).src = LAMP_GIF;
                     document.getElementById(CARD_LABEL_ID).innerText = LAMP_FIELD_TEXT;
                     document.getElementById(CARD_TEXT_ID).innerText = getKnowledgeText();
-
                     break;
                 case 2:
                     //Ignore action when reaching field with card action
@@ -918,11 +922,23 @@
 
                     break;
                 case 3:
-                    document.getElementById(CARD_ID).src = WINNER_GIF;
-                    document.getElementById(CARD_LABEL_ID).innerText = WINNER_FIELD_TEXT;
+
+                    switch (winnerList.length) {
+                        case 1:
+                            document.getElementById(CARD_ID).src = FIRST_IMAGE;
+                            document.getElementById(CARD_LABEL_ID).innerText = FIRST_FIELD_TEXT;
+                            break;
+                        case 2:
+                            document.getElementById(CARD_ID).src = SECOND_IMAGE;
+                            document.getElementById(CARD_LABEL_ID).innerText = SECOND_FIELD_TEXT;
+                            break;
+                        case 3:
+                            document.getElementById(CARD_ID).src = THIRD_IMAGE;
+                            document.getElementById(CARD_LABEL_ID).innerText = THIRD_FIELD_TEXT;
+                            break;
+                    }
                     document.getElementById(CARD_TEXT_ID).innerText = '';
 
-                    break;
                 default:
                     break;
             }
