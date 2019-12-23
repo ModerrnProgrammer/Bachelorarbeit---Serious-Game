@@ -108,7 +108,7 @@ label {
     background-color: lightskyblue;
 }
 
-#story_telling_p {
+#story_telling_div > p {
     display: block;
     font-size: 2rem;
     margin: 50px;

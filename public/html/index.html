@@ -13,7 +13,8 @@
         <span id="canvas_content_container"></span>
 
         <div id="story_telling_div" onclick="hide_story_text()">
-            <p id="story_telling_p">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+            <p id="story_telling_p"></p>
+            <p>Klicken zum Fortfahren</p>
         </div>
 
         <div id="cube_div">
@@ -137,6 +138,20 @@
         const THIRD_FIELD_TEXT = 'Du bist Dritter';
         const TOO_MANY_STEPS_TEXT = 'You have to finish with a suitable number of steps';
 
+        const REAL_STORY_TEXT = "Liebe Studenten,\n" +
+            "\n" +
+            "ihr habt euch bei uns für eine Trainee Stelle beworben. Unser Unternehmen bietet dem besten Bewerber/der besten Bewerberin viele Möglichkeiten zur Entfaltung und im Anschluss einen fristlosen Arbeitsvertrag.\n" +
+            "Unsere einzigen Bedingungen sind gute Note und vor allem ein selbstsicheres Auftreten.\n" +
+            "Wir wünschen euch viel Erfolg in euren letzten Klausuren, mündlichen Prüfungen und Präsentationen, wir sehen uns zum Assessment Center, wenn wir alle eine Abschlussnote haben.\n" +
+            "\n" +
+            "Bis dahin und viele Grüße.";
+
+        const FICTITIOUS_STORY_TEXT = "Liebe Badanklas,\n" +
+            "\n" +
+            "ihr habt alle tolle Vorhaben bei uns, dem großen Rat der Bedinklos, beantragt. Leider können wir nicht alle Vorhaben umsetzen. Deshalb haben wir beschlossen, das Vorhaben umzusetzen, dass uns am meisten überzeugt.\n" +
+            "\n" +
+            "Viel Erfolg euch!";
+
         function preload () {
             try {
                 //Load Characters - Pacman
@@ -191,6 +206,8 @@
 
                 //Load params
                 loadParameters(this);
+
+                initStoryText();
 
                 nextPlayer();
                 checkOverlappingAfter(25);
@@ -330,6 +347,15 @@
                 '{"pos_x":1050,"pos_y":650},{"pos_x":1050,"pos_y":550},{"pos_x":1050,"pos_y":450},' +
                 '{"pos_x":1050,"pos_y":350}, {"pos_x":1050,"pos_y":200}]');
 
+        }
+
+        function initStoryText() {
+            if (story_type === 'real') {
+                document.getElementById('story_telling_p').innerText = REAL_STORY_TEXT;
+            } else {
+                document.getElementById('story_telling_p').innerText = FICTITIOUS_STORY_TEXT;
+
+            }
         }
 
         function initFieldTypes() {
