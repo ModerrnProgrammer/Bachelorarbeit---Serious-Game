@@ -18,7 +18,7 @@
             </div>
             <button class="my_button" id="cube_roll_button" onclick="roll_the_dice()">START</button>
             <button class="my_button" id="cube_stop_button" onclick="stop_the_dice()">STOP</button>
-            <<button class="my_button" id="goal_button" onclick="toGoal()">ZIEL</button>
+            <button class="my_button" id="goal_button" onclick="toGoal()">ZIEL</button>
 
          </div>
 
@@ -70,7 +70,6 @@
         };
 
         //TODO: Oberfläche, die das Spiel / Die Geschichte erklärt
-        //TODO: Change GIFs
         //Explosion GIF
         const EXPLOSION_GIF = 'https://media.giphy.com/media/83lijARg592rC/giphy.gif';
         //Lamp GIF
@@ -82,7 +81,6 @@
         const SECOND_IMAGE = './images/second.png';
         const THIRD_IMAGE = './images/third.png';
 
-        //TODO: Gif for a 2nd and 3nd place
         //var objects = {};
         let game = new Phaser.Game(config);
 
@@ -129,8 +127,8 @@
         const LAMP_FIELD_TEXT = 'Knowledge Card!';
         const ACTION_FIELD_TEXT = 'Action Card!';
         const FIRST_FIELD_TEXT = 'Du bist Erster!!';
-        const SECOND_FIELD_TEXT = 'DU bist Zweiter';
-        const THIRD_FIELD_TEXT = 'DU bist Dritter';
+        const SECOND_FIELD_TEXT = 'Du bist Zweiter';
+        const THIRD_FIELD_TEXT = 'Du bist Dritter';
         const TOO_MANY_STEPS_TEXT = 'You have to finish with a suitable number of steps';
 
         function preload () {
@@ -787,7 +785,7 @@
                 }
             }
 
-
+            //TODO: Spielerwechesl beim passenden Gehen ins Ziel
             let count = 0;
 
 

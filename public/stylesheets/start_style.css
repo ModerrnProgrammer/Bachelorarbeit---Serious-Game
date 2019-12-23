@@ -37,6 +37,7 @@ body {
     background-color: white;
     margin: 10%;
     max-height: 70%;
+    max-width: 80%;
     object-fit: cover;
 
 }
