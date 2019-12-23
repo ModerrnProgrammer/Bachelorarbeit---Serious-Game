@@ -11,6 +11,11 @@
 
     <div id="content">
         <span id="canvas_content_container"></span>
+
+        <div id="story_telling_div" onclick="hide_story_text()">
+            <p id="story_telling_p">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+        </div>
+
         <div id="cube_div">
             <h1 class="my_headline" id="cube_field_headline">Würfel</h1>
             <div id="cube_numberfield_label">
@@ -70,6 +75,7 @@
         };
 
         //TODO: Oberfläche, die das Spiel / Die Geschichte erklärt
+        //TODO: Spieloberfläche Design ändern
         //Explosion GIF
         const EXPLOSION_GIF = 'https://media.giphy.com/media/83lijARg592rC/giphy.gif';
         //Lamp GIF
@@ -649,7 +655,6 @@
             }
         }
 
-        //TODO: Testen, wenn man eine Karte mit zu vielen Schritten hat
         let waitForAction = false;
         let beforeOverlapping = true;
         function check_move_states() {
@@ -785,7 +790,6 @@
                 }
             }
 
-            //TODO: Spielerwechesl beim passenden Gehen ins Ziel
             let count = 0;
 
 
@@ -1079,6 +1083,10 @@
             let player = game.add.sprite(400,400, image);
             return new Character(name, player, 0);
 
+        }
+
+        function hide_story_text() {
+            document.getElementById('story_telling_div').style.zIndex = '9';
         }
 
     </script>

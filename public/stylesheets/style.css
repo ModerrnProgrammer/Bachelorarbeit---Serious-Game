@@ -1,7 +1,7 @@
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-    zoom: 80%;
+    background-color: #00B7FF;
 }
 
 a {
@@ -98,6 +98,20 @@ label {
 #canvas_content_container {
     position: absolute;
     z-index: 10;
+}
+
+#story_telling_div {
+    position: absolute;
+    z-index: 11;
+    width: 1200px;
+    height: 800px;
+    background-color: lightskyblue;
+}
+
+#story_telling_p {
+    display: block;
+    font-size: 2rem;
+    margin: 50px;
 }
 
 
