@@ -7,18 +7,10 @@ body {
 a {
   color: #00B7FF;
 }
+
 #content {
     width: 100%;
     height: 100%;
-}
-#cube_div {
-    width: 200px;
-    height: 640px;
-    position: absolute;
-    left: 1650px;
-    top: 120px;
-    background-color: lightskyblue;
-    padding: 50px;
 }
 
 .my_button {
@@ -45,11 +37,10 @@ label {
 }
 
 #card_image {
-    width: 250px;
-    height: 400px;
+    width: 350px;
+    height: 600px;
     margin-bottom: 10px;
 }
-
 
 .my_headline {
     text-align: center;
@@ -60,24 +51,19 @@ label {
 }
 
 #card_div {
-    width: 300px;
-    height: 720px;
-    position: absolute;
-    top: 120px;
-    bottom: 0;
-    right: 0;
-    left: 1300px;
+    width: 600px;
+    height: 780px;
+
 }
 
 #image_div {
-    position: absolute;
-    left: 35px;
-    top: 315px;
+    width: 350px;
+    height: 600px;
     z-index: 5;
 }
 
 #card_image_overlay {
-    position: absolute;
+
     z-index: 4;
     opacity: 0.5;
 }
@@ -94,6 +80,13 @@ label {
     border-style: none;
 }
 
+#cube_img:hover {
+    cursor: grab;
+}
+
+#cube_img {
+    margin: auto auto 20px;
+}
 
 #canvas_content_container {
     position: absolute;
@@ -114,24 +107,22 @@ label {
     margin: 50px;
 }
 
-
 #card_div {
     z-index: 1;
     padding: 10px;
-    background-color: lightskyblue;
+    background-color: red;
     text-align: center;
+    margin-left: 1200px;
 }
 
-#current_player_div {
-    width: 650px;
-    position: absolute;
-    left: 1300px;
-}
 
 #current_player_name_label {
-
-    background-color: lightskyblue;
+    background-color: purple;
 }
 
-
+#card_content {
+    width: 300px;
+    height: 600px;
+    margin: auto;
+}
 

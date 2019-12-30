@@ -152,7 +152,7 @@
         function initImages() {
             let url = new URL(window.location.href);
             let story_type = url.searchParams.get("type");
-            console.log('init', story_type)
+            console.log('init', story_type);
             if (story_type === 'real') {
                 document.getElementById('image_1').src = './images/woman_1.png';
                 document.getElementById('image_2').src = './images/man_1.png';

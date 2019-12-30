@@ -17,26 +17,20 @@
             <p>Klicken zum Fortfahren</p>
         </div>
 
-        <div id="cube_div">
-            <h1 class="my_headline" id="cube_field_headline">Würfel</h1>
-            <div id="cube_numberfield_label">
-                <label id="cube_numberfield">-1</label>
-            </div>
-            <button class="my_button" id="cube_roll_button" onclick="roll_the_dice()">START</button>
-            <button class="my_button" id="cube_stop_button" onclick="stop_the_dice()">STOP</button>
-            <button class="my_button" id="goal_button" onclick="toGoal()">ZIEL</button>
 
-         </div>
 
         <div id="card_div">
-            <div class="my_headline" id="card_headline">
-                <h1>Cards</h1>
+            <div id="current_player_and_cube_div">
+                <label id="current_player_name_label">Current player:</label>
             </div>
+
+            <div id="cube_div">
+                <img id="cube_img" src="./images/dice_one.png" onclick="roll_the_dice()">
+            </div>
+
             <div id="card_content">
-                <div id="image_main_div">
-                    <div id="image_div">
-                        <img id="card_image" src="https://media.giphy.com/media/3ov9k1173PdfJWRsoE/giphy.gif" alt="Image">
-                    </div>
+                <div id="image_div">
+                    <img id="card_image" src="https://media.giphy.com/media/3ov9k1173PdfJWRsoE/giphy.gif" alt="Image">
                 </div>
                 <div id="card_image_overlay" hidden>
                     <label id="card_image_overlay_label" onclick="executeCardAction(currentActionCard);">Weiter</label>
@@ -48,9 +42,7 @@
             </div>
         </div>
 
-        <div id="current_player_div">
-            <label id="current_player_name_label">Current player:</label>
-        </div>
+
     </div>
 
 
@@ -75,7 +67,10 @@
             }
         };
 
+        //TODO: Texte auf Deutsch machen
         //TODO: Spieloberfläche Design ändern
+        //TODO: Buttons erst nach story weg aktivieren
+
         //Explosion GIF
         const EXPLOSION_GIF = 'https://media.giphy.com/media/83lijARg592rC/giphy.gif';
         //Lamp GIF
@@ -643,19 +638,44 @@
         }
 
         let roll = false;
+        const TIME_OF_ROLLING_CUBE = 2000;
         async function  roll_the_dice() {
             if (!ready || roll || waitForAction)  return;
             let number = 0;
-            document.getElementById('cube_numberfield').innerText = number;
             roll = true;
+            const start = Date.now();
+            let random_time_delay = Math.random() * 1000;
+            let dice_rolling_speed = 80;
+            console.log(random_time_delay);
             while (roll) {
                 number += 1;
                 if (number === 7) {
                     number = 1;
                 }
-                document.getElementById('cube_numberfield').innerText = number;
-                await Sleep(15);
 
+
+                document.getElementById('cube_img').src = getDiceImage(number);
+                await Sleep(dice_rolling_speed);
+                dice_rolling_speed+=20;
+                //Abbruch bedingung
+
+                if (Date.now() > start + TIME_OF_ROLLING_CUBE + random_time_delay) {
+                    roll = false;
+                    steps = number;
+                    currentPlayer.field_nr += 1;
+                }
+            }
+        }
+
+        function getDiceImage(number) {
+            const BASE_PATH = './images/';
+            switch (number) {
+                case 1: return BASE_PATH + 'dice_one.png';
+                case 2: return BASE_PATH + 'dice_two.png';
+                case 3: return BASE_PATH + 'dice_three.png';
+                case 4: return BASE_PATH + 'dice_four.png';
+                case 5: return BASE_PATH + 'dice_five.png';
+                case 6: return BASE_PATH + 'dice_six.png';
             }
         }
 
