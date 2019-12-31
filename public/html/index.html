@@ -21,24 +21,23 @@
 
         <div id="card_div">
             <div id="current_player_and_cube_div">
-                <label id="current_player_name_label">Current player:</label>
+                <img id="cube_img" src="./images/dice_one.png" onclick="roll_the_dice()">
+                <span id="current_player_name_span">Aktuller Spieler:</span>
+                <br>
+                <span id="current_player_name_label"></span>
+
             </div>
 
-            <div id="cube_div">
-                <img id="cube_img" src="./images/dice_one.png" onclick="roll_the_dice()">
-            </div>
+
 
             <div id="card_content">
                 <div id="image_div">
-                    <img id="card_image" src="https://media.giphy.com/media/3ov9k1173PdfJWRsoE/giphy.gif" alt="Image">
+                    <img id="card_image" src="./images/blank.jpg" alt="Image">
                 </div>
-                <div id="card_image_overlay" hidden>
-                    <label id="card_image_overlay_label" onclick="executeCardAction(currentActionCard);">Weiter</label>
-                </div>
+
             </div>
             <div id="card_bottom">
-                <label id="card_bottom_label">Start the game</label>
-                <label id="card_text">Paste text here</label>
+                <label id="card_text" onclick="executeCardAction(currentActionCard);"></label>
             </div>
         </div>
 
@@ -71,12 +70,15 @@
         //TODO: Spieloberfläche Design ändern
         //TODO: Buttons erst nach story weg aktivieren
 
-        //Explosion GIF
-        const EXPLOSION_GIF = 'https://media.giphy.com/media/83lijARg592rC/giphy.gif';
-        //Lamp GIF
-        const LAMP_GIF = 'https://media.giphy.com/media/l1KVaST85EIicDiLe/giphy.gif';
+        //Quelle: animography.net
+        //Action GIF
+        const ACTION_GIF = 'https://media.giphy.com/media/83lijARg592rC/giphy.gif';
+        const ACTION_GIF_FROZEN = './images/action_card_frozen.jpg';
+        //Knowledge GIF
+        const  KNOWLEDGE_GIF= 'https://media.giphy.com/media/wH4rY2nPnEnp6/source.gif';
+        const  KNOWLEDGE_GIF_FROZEN = './images/knowledge_card_frozen.jpg';
         //Empty field GIF
-        const EMPTY_FIELD_GIF = 'https://media.giphy.com/media/l1J9EdzfOSgfyueLm/giphy.gif';
+        const EMPTY_FIELD_IMG = './images/blank.jpg';
         //Winner GIF
         const FIRST_IMAGE = './images/first.png';
         const SECOND_IMAGE = './images/second.png';
@@ -124,13 +126,12 @@
         const CARD_LABEL_ID = 'card_bottom_label';
         const CARD_TEXT_ID = 'card_text';
 
-        const EMPTY_FIELD_TEXT = 'No card!';
-        const LAMP_FIELD_TEXT = 'Knowledge Card!';
-        const ACTION_FIELD_TEXT = 'Action Card!';
+
         const FIRST_FIELD_TEXT = 'Du bist Erster!!';
         const SECOND_FIELD_TEXT = 'Du bist Zweiter';
         const THIRD_FIELD_TEXT = 'Du bist Dritter';
-        const TOO_MANY_STEPS_TEXT = 'You have to finish with a suitable number of steps';
+        const TOO_MANY_STEPS_TEXT = 'Du musst das Ziel mit einer passenden Augenzahl erreichen!';
+        const EMPTY_TEXT = 'Hier passiert nichts';
 
         const REAL_STORY_TEXT = "Liebe Studenten,\n" +
             "\n" +
@@ -148,17 +149,7 @@
 
         function preload () {
             try {
-                //Load Characters - Pacman
-                /*
-                this.load.image('pink_left', './images/pink_left.png');
-                this.load.image('pink_right', './images/pink_right.png');
-                this.load.image('red_left', './images/red_left.png');
-                this.load.image('red_right', './images/red_right.png');
-                this.load.image('blue_left', './images/blue_left.png');
-                this.load.image('blue_right', './images/blue_right.png');
-                this.load.image('yellow_left', './images/yellow_left.png');
-                this.load.image('yellow_right', './images/yellow_right.png');
-                */
+
 
                 //Load Characters - Monsters
                 this.load.image('monster_red', './images/monster_red_mini.png');
@@ -196,7 +187,6 @@
                 initActionCardsFictitious();
 
                 generateGameBoard(this);
-                //drawCharacters(this);
 
                 //Load params
                 loadParameters(this);
@@ -233,7 +223,7 @@
             }
 
             currentPlayer = playerList[currentPlayerPos];
-            document.getElementById('current_player_name_label').innerText = 'Current player: ' + currentPlayer.name;
+            document.getElementById('current_player_name_label').innerText = currentPlayer.name;
             beforeOverlapping = true;
         }
 
@@ -640,7 +630,7 @@
         let roll = false;
         const TIME_OF_ROLLING_CUBE = 2000;
         async function  roll_the_dice() {
-            if (!ready || roll || waitForAction)  return;
+            if (!ready || roll || waitForAction || !story_hidden)  return;
             let number = 0;
             roll = true;
             const start = Date.now();
@@ -915,10 +905,13 @@
 
         let currentActionCard;
 
+        const GIF_DURATION = 2000;
         async function setImageAndText() {
 
 
             let type = gamefield_types[currentPlayer.field_nr];
+
+            document.getElementById(CARD_TEXT_ID).style.opacity = 0.7;
             switch (type) {
                 case -1:
                     break;
@@ -930,9 +923,8 @@
                     }
 
                     // Reset card and text
-                    document.getElementById(CARD_ID).src = EMPTY_FIELD_GIF;
-                    document.getElementById(CARD_LABEL_ID).innerText = EMPTY_FIELD_TEXT;
-                    document.getElementById(CARD_TEXT_ID).innerText = '';
+                    document.getElementById(CARD_ID).src = EMPTY_FIELD_IMG;
+                    document.getElementById(CARD_TEXT_ID).innerText = 'Leeres Feld:\n' + EMPTY_TEXT;
                     break;
                 case 1:
                     //Ignore action when reaching field with card action
@@ -943,9 +935,12 @@
 
                     // Set card and text to knowledge theme
                     // Choose random knowledge phrase
-                    document.getElementById(CARD_ID).src = LAMP_GIF;
-                    document.getElementById(CARD_LABEL_ID).innerText = LAMP_FIELD_TEXT;
-                    document.getElementById(CARD_TEXT_ID).innerText = getKnowledgeText();
+                    document.getElementById(CARD_ID).src = KNOWLEDGE_GIF;
+                    Sleep(GIF_DURATION);
+                    document.getElementById(CARD_ID).src = KNOWLEDGE_GIF_FROZEN;
+                    document.getElementById(CARD_TEXT_ID).innerText = 'Wissenskarte:\n' + getKnowledgeText();
+
+
                     break;
                 case 2:
                     //Ignore action when reaching field with card action
@@ -953,18 +948,14 @@
                         ignoreAction = false;
                         break;
                     }
-                    document.getElementById(CARD_ID).src = EXPLOSION_GIF;
-                    document.getElementById(CARD_LABEL_ID).innerText = ACTION_FIELD_TEXT;
+                    document.getElementById(CARD_ID).src = ACTION_GIF;
                     let action_card = getActionText();
-                    document.getElementById(CARD_TEXT_ID).innerText = action_card.text;
-
-
-                    //Auf dem Klick Zug ausführen
-                    document.getElementById('card_image_overlay').hidden = false;
-                    document.getElementById('image_div').style.zIndex = "3";
-                    document.getElementById('image_div').style.opacity = "0.5";
+                    Sleep(GIF_DURATION);
+                    document.getElementById(CARD_ID).src = ACTION_GIF_FROZEN;
+                    document.getElementById(CARD_TEXT_ID).innerText = 'Aktionskarte:\n' +action_card.text + '\nKlicken zum Fortfahren';
 
                     waitForAction = true;
+                    executed = false;
                     currentActionCard = action_card;
 
                     break;
@@ -1060,7 +1051,9 @@
 
         //Var that the fields action of the next check_move_states is ignored
         let ignoreAction = false;
+        let executed = false;
         function executeCardAction(action_card) {
+            if (action_card === undefined || executed) return;
             steps = action_card.action;
 
 
@@ -1072,15 +1065,17 @@
             //New science card
             if (action_card.card === 1) {
                 document.getElementById(CARD_TEXT_ID).innerText = getKnowledgeText();
-                document.getElementById(CARD_ID).src = LAMP_GIF;
+                document.getElementById(CARD_TEXT_ID).style.opacity = 0.7;
+                document.getElementById(CARD_ID).src = KNOWLEDGE_GIF;
+                Sleep(GIF_DURATION);
+                document.getElementById(CARD_ID).src = KNOWLEDGE_GIF_FROZEN;
+
             }
 
             ignoreAction = true;
             waitForAction= false;
+            executed = true;
 
-            document.getElementById('card_image_overlay').hidden = true;
-            document.getElementById('image_div').style.zIndex = "5";
-            document.getElementById('image_div').style.opacity = "1";
         }
 
         function toGoal() {
@@ -1130,8 +1125,10 @@
 
         }
 
+        let story_hidden = false;
         function hide_story_text() {
             document.getElementById('story_telling_div').style.zIndex = '9';
+            story_hidden = true;
         }
 
     </script>
