@@ -669,14 +669,6 @@
             }
         }
 
-        function  stop_the_dice() {
-            if (roll || waitForAction) {
-                roll = false;
-                steps = parseInt(document.getElementById('cube_numberfield').innerText);
-                currentPlayer.field_nr += 1;
-            }
-        }
-
 
 
         //Game is finished variable
@@ -1127,7 +1119,7 @@
 
         let story_hidden = false;
         function hide_story_text() {
-            document.getElementById('story_telling_div').style.zIndex = '9';
+            document.getElementById('story_telling_div').style.visibility = 'hidden';
             story_hidden = true;
         }
 
