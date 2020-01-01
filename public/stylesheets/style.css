@@ -1,9 +1,10 @@
 body {
   padding: 50px;
+
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
     background-color: #00B7FF;
-    zoom: 120%;
-    margin: auto;
+    zoom: 80%;
+    margin-left: 6%;
 }
 
 a {
@@ -43,6 +44,8 @@ label {
     width: 350px;
     height: 600px;
     margin-bottom: 10px;
+    opacity: 0.7;
+    z-index: 5;
 }
 
 .my_headline {
@@ -52,17 +55,16 @@ label {
 #card_text {
     font-size: 25px;
     position: absolute;
-    left: 1262px;
-    top: 223px;
+    left: 1377px;
+    top: 231px;
     width: 321px;
     height: 585px;
     color: black;
     padding: 15px 15px 0;
-    z-index: 6;
-    opacity: 0.7;
-    background-color: white;
+    z-index: 4;
     border-style: none;
 }
+
 
 #card_text:hover {
     cursor: grab;
@@ -86,16 +88,7 @@ label {
     opacity: 0.5;
 }
 
-#card_image_overlay_label {
-    position: absolute;
-    left: 1260px;
-    top: 315px;
-    display: block;
-    font-size: 70px;
-    color: black;
-    text-align: center;
-    border-style: none;
-}
+
 
 #card_image_overlay_label:hover {
     cursor: grab;

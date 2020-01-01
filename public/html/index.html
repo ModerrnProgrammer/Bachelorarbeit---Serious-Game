@@ -878,7 +878,6 @@
                     end = true;
                     alert('Das Spiel ist zu Ende! ' + winner + " hat das Spiel gewonnen. Bitte füllen Sie nun den Post Test aus. Danke für's Spielen!!");
                     document.getElementById('cube_img').onclick = '';
-                    document.getElementById('cube_img').style.opacity = 0.5;
                 }
             }
         }
@@ -889,7 +888,6 @@
          function setImageAndText() {
 
             let type = gamefield_types[currentPlayer.field_nr];
-            document.getElementById(CARD_TEXT_ID).style.opacity = 0.7;
 
             switch (type) {
                 case -1:
@@ -1042,7 +1040,6 @@
             //New science card
             if (action_card.card === 1) {
                 document.getElementById(CARD_TEXT_ID).innerText = getKnowledgeText();
-                document.getElementById(CARD_TEXT_ID).style.opacity = 0.7;
                 document.getElementById(CARD_ID).src = KNOWLEDGE_GIF_FROZEN;
             } else {
                 document.getElementById(CARD_TEXT_ID).innerText = '';

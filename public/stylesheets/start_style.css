@@ -34,12 +34,11 @@ body {
     left: 55%;
 }
 .story_selection_image {
-    background-color: white;
+    background-color: #00B7FF;
     margin: 10%;
     max-height: 70%;
     max-width: 80%;
     object-fit: cover;
-
 }
 
 #images_div {
@@ -58,3 +57,10 @@ body {
     background-color: #00B7FF;
 }
 
+#img_fic {
+    padding-top: 50px;
+}
+
+#real_story_outer_span, #fictitious_story_outer_span {
+    padding: 20px;
+}
