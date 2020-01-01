@@ -25,7 +25,6 @@
                 <span id="current_player_name_span">Aktuller Spieler:</span>
                 <br>
                 <span id="current_player_name_label"></span>
-
             </div>
 
 
@@ -66,18 +65,13 @@
             }
         };
 
-        //TODO: Texte auf Deutsch machen
-        //TODO: Spieloberfläche Design ändern
-        //TODO: Buttons erst nach story weg aktivieren
 
         //Quelle: animography.net
         //Action GIF
-        const ACTION_GIF = 'https://media.giphy.com/media/83lijARg592rC/giphy.gif';
         const ACTION_GIF_FROZEN = './images/action_card_frozen.jpg';
         //Knowledge GIF
-        const  KNOWLEDGE_GIF= 'https://media.giphy.com/media/wH4rY2nPnEnp6/source.gif';
         const  KNOWLEDGE_GIF_FROZEN = './images/knowledge_card_frozen.jpg';
-        //Empty field GIF
+        //Empty field GIF TODO: Anders
         const EMPTY_FIELD_IMG = './images/blank.jpg';
         //Winner GIF
         const FIRST_IMAGE = './images/first.png';
@@ -123,7 +117,6 @@
 
         //Constants
         const CARD_ID = 'card_image';
-        const CARD_LABEL_ID = 'card_bottom_label';
         const CARD_TEXT_ID = 'card_text';
 
 
@@ -628,15 +621,15 @@
         }
 
         let roll = false;
-        const TIME_OF_ROLLING_CUBE = 2000;
+        const TIME_OF_ROLLING_CUBE = 1500;
         async function  roll_the_dice() {
             if (!ready || roll || waitForAction || !story_hidden)  return;
+            ignoreAction = false;
             let number = 0;
             roll = true;
             const start = Date.now();
-            let random_time_delay = Math.random() * 1000;
+            let random_time_delay = Math.random() * 1500;
             let dice_rolling_speed = 80;
-            console.log(random_time_delay);
             while (roll) {
                 number += 1;
                 if (number === 7) {
@@ -690,12 +683,9 @@
 
             //Würfelzahl ist zu groß, da passend ins Ziel gegangen werden soll
             if (currentPlayer.field_nr + steps > gamefield_types.length) {
-                console.log(currentPlayer, steps, gamefield_types.length);
-
                 //Reset moving init
                 currentPlayer.field_nr--;
                 steps = 0;
-
                 document.getElementById('card_text').innerText = TOO_MANY_STEPS_TEXT;
                 nextPlayer();
                 ready = true;
@@ -712,21 +702,21 @@
             //Start field pos check
             if (currentPlayer.field_nr < 0) {
                 currentPlayer.field_nr = 0;
+                ignoreAction = false;
             }
 
             let pos_tupel = calculateNewField(currentPlayer.field_nr);
+
             let stop_value_x = pos_tupel.pos_x;
             let stop_value_y = pos_tupel.pos_y;
             const SPEED = 10;
 
             let direction = calculateDirection(currentPlayer.player.x, currentPlayer.player.y, stop_value_x, stop_value_y);
-
             move(direction, stop_value_x, stop_value_y, SPEED);
 
         }
 
         function move(direction, stop_value_x, stop_value_y, speed) {
-            console.log('Move');
             switch (direction) {
                 case 'up':
                     if (currentPlayer.player.y !== stop_value_y) {
@@ -758,13 +748,12 @@
         }
 
         function checkOverlappingBefore() {
-            console.log('Before');
             let pos_tupel = calculateNewField(currentPlayer.field_nr - 1);
             currentPlayer.player.x = pos_tupel.pos_x;
             currentPlayer.player.y = pos_tupel.pos_y;
         }
 
-        function checkLastMove(value1, value2) {
+         function checkLastMove(value1, value2) {
             //if last check_move_states
             if (value1 === value2) {
                 if (currentPlayer.field_nr === 0) {
@@ -785,7 +774,7 @@
                 if (steps === 0) {
                     checkWin();
 
-                    setImageAndText();
+                     setImageAndText();
 
 
                     if (!waitForAction) {
@@ -858,7 +847,6 @@
                 for (let i = 0; i < playerList.length; i++) {
                     if (currentPlayer === playerList[i]) {
                         playerList.splice(i, 1);
-                        console.log('Removing', currentPlayer.name);
                         winnerList.push(currentPlayer);
                     }
                 }
@@ -888,22 +876,21 @@
                 //Game is finished when just one last player has not reached the goal
                 if (playerList.length === 1) {
                     end = true;
-                    alert('The game is finished! ' + winner + " won the game. Please answer the questions.");
-                    document.getElementById('cube_roll_button').disabled = true;
-                    document.getElementById('cube_stop_button').disabled = true;
+                    alert('Das Spiel ist zu Ende! ' + winner + " hat das Spiel gewonnen. Bitte füllen Sie nun den Post Test aus. Danke für's Spielen!!");
+                    document.getElementById('cube_img').onclick = '';
+                    document.getElementById('cube_img').style.opacity = 0.5;
                 }
             }
         }
 
         let currentActionCard;
 
-        const GIF_DURATION = 2000;
-        async function setImageAndText() {
-
+        const GIF_DURATION = 1500;
+         function setImageAndText() {
 
             let type = gamefield_types[currentPlayer.field_nr];
-
             document.getElementById(CARD_TEXT_ID).style.opacity = 0.7;
+
             switch (type) {
                 case -1:
                     break;
@@ -913,7 +900,6 @@
                         ignoreAction = false;
                         break;
                     }
-
                     // Reset card and text
                     document.getElementById(CARD_ID).src = EMPTY_FIELD_IMG;
                     document.getElementById(CARD_TEXT_ID).innerText = 'Leeres Feld:\n' + EMPTY_TEXT;
@@ -927,8 +913,6 @@
 
                     // Set card and text to knowledge theme
                     // Choose random knowledge phrase
-                    document.getElementById(CARD_ID).src = KNOWLEDGE_GIF;
-                    Sleep(GIF_DURATION);
                     document.getElementById(CARD_ID).src = KNOWLEDGE_GIF_FROZEN;
                     document.getElementById(CARD_TEXT_ID).innerText = 'Wissenskarte:\n' + getKnowledgeText();
 
@@ -940,9 +924,8 @@
                         ignoreAction = false;
                         break;
                     }
-                    document.getElementById(CARD_ID).src = ACTION_GIF;
+
                     let action_card = getActionText();
-                    Sleep(GIF_DURATION);
                     document.getElementById(CARD_ID).src = ACTION_GIF_FROZEN;
                     document.getElementById(CARD_TEXT_ID).innerText = 'Aktionskarte:\n' +action_card.text + '\nKlicken zum Fortfahren';
 
@@ -956,19 +939,18 @@
                     switch (winnerList.length) {
                         case 1:
                             document.getElementById(CARD_ID).src = FIRST_IMAGE;
-                            document.getElementById(CARD_LABEL_ID).innerText = FIRST_FIELD_TEXT;
+                            document.getElementById(CARD_TEXT_ID).innerText = FIRST_FIELD_TEXT;
                             break;
                         case 2:
                             document.getElementById(CARD_ID).src = SECOND_IMAGE;
-                            document.getElementById(CARD_LABEL_ID).innerText = SECOND_FIELD_TEXT;
+                            document.getElementById(CARD_TEXT_ID).innerText = SECOND_FIELD_TEXT;
                             break;
                         case 3:
                             document.getElementById(CARD_ID).src = THIRD_IMAGE;
-                            document.getElementById(CARD_LABEL_ID).innerText = THIRD_FIELD_TEXT;
+                            document.getElementById(CARD_TEXT_ID).innerText = THIRD_FIELD_TEXT;
                             break;
                     }
-                    document.getElementById(CARD_TEXT_ID).innerText = '';
-
+                    break;
                 default:
                     break;
             }
@@ -993,6 +975,8 @@
         }
 
         function calculateNewField(nr) {
+            if (nr < 0) nr = 0;
+            currentPlayer.player.field_nr = 0;
             return gamefield_positions[nr];
         }
 
@@ -1044,7 +1028,8 @@
         //Var that the fields action of the next check_move_states is ignored
         let ignoreAction = false;
         let executed = false;
-        function executeCardAction(action_card) {
+         function executeCardAction(action_card) {
+            console.log(action_card.card, currentPlayer.name);
             if (action_card === undefined || executed) return;
             steps = action_card.action;
 
@@ -1058,10 +1043,9 @@
             if (action_card.card === 1) {
                 document.getElementById(CARD_TEXT_ID).innerText = getKnowledgeText();
                 document.getElementById(CARD_TEXT_ID).style.opacity = 0.7;
-                document.getElementById(CARD_ID).src = KNOWLEDGE_GIF;
-                Sleep(GIF_DURATION);
                 document.getElementById(CARD_ID).src = KNOWLEDGE_GIF_FROZEN;
-
+            } else {
+                document.getElementById(CARD_TEXT_ID).innerText = '';
             }
 
             ignoreAction = true;
