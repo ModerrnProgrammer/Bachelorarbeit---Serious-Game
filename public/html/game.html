@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Serious Game by Moritz Rohde</title>
-    <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+    <link rel="stylesheet" type="text/css" href="stylesheets/game_style.css">
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
@@ -25,6 +25,7 @@
                 <span id="current_player_name_span">Aktuller Spieler:</span>
                 <br>
                 <span id="current_player_name_label"></span>
+                <button onclick="toGoal()">ZIEL</button>
             </div>
 
 
@@ -99,7 +100,7 @@
         //public var for steps to go
         let steps = 0;
 
-        //public print x and y values
+        //public print x and y values - Start position
         var_print_x = 250;
         var_print_y = 250;
 
@@ -620,6 +621,7 @@
             graphics.strokeLineShape(line);
         }
 
+        //Is the cube currently rolling
         let roll = false;
         const TIME_OF_ROLLING_CUBE = 1500;
         async function  roll_the_dice() {
@@ -662,8 +664,6 @@
             }
         }
 
-
-
         //Game is finished variable
         let end = false;
         function update() {
@@ -686,7 +686,8 @@
                 //Reset moving init
                 currentPlayer.field_nr--;
                 steps = 0;
-                document.getElementById('card_text').innerText = TOO_MANY_STEPS_TEXT;
+                document.getElementById(CARD_TEXT_ID).innerText = TOO_MANY_STEPS_TEXT;
+                document.getElementById(CARD_ID).src = EMPTY_FIELD_IMG;
                 nextPlayer();
                 ready = true;
                 return;
@@ -772,10 +773,8 @@
                     if (steps < 0) currentPlayer.field_nr--;
                 }
                 if (steps === 0) {
+                    setImageAndText();
                     checkWin();
-
-                     setImageAndText();
-
 
                     if (!waitForAction) {
                         nextPlayer();
@@ -783,10 +782,8 @@
 
                     checkOverlappingAfter(20);
 
-
                     ready = true;
                 }
-
             }
         }
 
@@ -1056,6 +1053,10 @@
             currentPlayer.field_nr++;
         }
 
+        /** Loading game Parameters from URL
+         *  including game type, player names and playes images
+         * @param game
+         */
         function loadParameters(game) {
             try {
                 let url = new URL(window.location.href);

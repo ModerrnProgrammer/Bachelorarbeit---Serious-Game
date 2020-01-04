@@ -94,8 +94,9 @@
                 return;
             }
 
-            let new_url = 'http://localhost:3000/game';
+            let new_url = window.location.protocol + '//' + window.location.host + '/game';
             let old_url = new URL(window.location.href);
+
 
             let story_type = old_url.searchParams.get("type");
             const querystring = encodeQueryData(players_list);
@@ -105,10 +106,6 @@
         }
 
         function selectImage(image, color) {
-            document.getElementById('img_div_1').style.background = "lightskyblue";
-            document.getElementById('img_div_2').style.background = "lightskyblue";
-            document.getElementById('img_div_3').style.background = "lightskyblue";
-            document.getElementById('img_div_4').style.background = "lightskyblue";
             document.getElementById(image.id).style.background = "#f00";
             document.getElementById(image.id).className = '';
             selected_char = image.id;
@@ -181,7 +178,6 @@
     </div>
 
     <div id="created_players_div">
-        <!-- TODO: Format -->
     </div>
 
     <div id="new_char_div">

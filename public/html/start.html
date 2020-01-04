@@ -29,11 +29,14 @@
 
 
         function loadGame(gametype) {
+            let url = window.location.protocol + '//' + window.location.host + '/players';
+
             if (gametype === 'real') {
-                window.location.replace('http://localhost:3000/players?type=real');
+                url += '?type=real';
             } else {
-                window.location.replace('http://localhost:3000/players?type=fictitious');
+                url += '?type=fictitious';
             }
+            window.location.replace(url);
         }
     </script>
 </div>
