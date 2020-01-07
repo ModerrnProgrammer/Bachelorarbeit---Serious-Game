@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Serious Game by Moritz Rohde</title>
-    <link rel="stylesheet" type="text/css" href="stylesheets/game_style.css">
+    <link rel="stylesheet" type="text/css" href="public/stylesheets/game_style.css">
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
@@ -21,18 +21,17 @@
 
         <div id="card_div">
             <div id="current_player_and_cube_div">
-                <img id="cube_img" src="./images/dice_one.png" onclick="roll_the_dice()">
+                <img id="cube_img" src="./public/images/dice_one.png" onclick="roll_the_dice()">
                 <span id="current_player_name_span">Aktuller Spieler:</span>
                 <br>
                 <span id="current_player_name_label"></span>
-                <button onclick="toGoal()">ZIEL</button>
             </div>
 
 
 
             <div id="card_content">
                 <div id="image_div">
-                    <img id="card_image" src="./images/blank.jpg" alt="Image">
+                    <img id="card_image" src="./public/images/blank.jpg" alt="Image">
                 </div>
 
             </div>
@@ -40,7 +39,14 @@
                 <label id="card_text" onclick="executeCardAction(currentActionCard);"></label>
             </div>
         </div>
-
+        <div id='test_div'>
+            <button onclick='toGoal(38)'>38</button>
+            <button onclick='toGoal(6)'>6</button>
+            <p class='test_p'>Link zum Pre Test:</p>
+            <a id='test_link' href='https://www.survio.com/survey/d/F2O3Y8A4F8W3G2C3V'>https://www.survio.com/survey/d/F2O3Y8A4F8W3G2C3V</a>
+            <p class='test_p'>Passwort: MR1709</p>
+            <img id='qr_code' src='./public/images/post_test_code.png'>
+        </div>
 
     </div>
 
@@ -69,15 +75,15 @@
 
         //Quelle: animography.net
         //Action GIF
-        const ACTION_GIF_FROZEN = './images/action_card_frozen.jpg';
+        const ACTION_GIF_FROZEN = './public/images/action_card_frozen.jpg';
         //Knowledge GIF
-        const  KNOWLEDGE_GIF_FROZEN = './images/knowledge_card_frozen.jpg';
+        const  KNOWLEDGE_GIF_FROZEN = './public/images/knowledge_card_frozen.jpg';
         //Empty field GIF TODO: Anders
-        const EMPTY_FIELD_IMG = './images/blank.jpg';
+        const EMPTY_FIELD_IMG = './public/images/blank.jpg';
         //Winner GIF
-        const FIRST_IMAGE = './images/first.png';
-        const SECOND_IMAGE = './images/second.png';
-        const THIRD_IMAGE = './images/third.png';
+        const FIRST_IMAGE = './public/images/first.png';
+        const SECOND_IMAGE = './public/images/second.png';
+        const THIRD_IMAGE = './public/images/third.png';
 
         //var objects = {};
         let game = new Phaser.Game(config);
@@ -146,23 +152,23 @@
 
 
                 //Load Characters - Monsters
-                this.load.image('monster_red', './images/monster_red_mini.png');
-                this.load.image('monster_green', './images/monster_green_mini.png');
-                this.load.image('monster_lightgreen', './images/monster_lightgreen_mini.png');
-                this.load.image('monster_purple', './images/monster_purple_mini.png');
+                this.load.image('monster_red', './public/images/monster_red_mini.png');
+                this.load.image('monster_green', './public/images/monster_green_mini.png');
+                this.load.image('monster_lightgreen', './public/images/monster_lightgreen_mini.png');
+                this.load.image('monster_purple', './public/images/monster_purple_mini.png');
 
                 //load Characters - Students
-                this.load.image('student_1', './images/woman_mini_1.png');
-                this.load.image('student_2', './images/man_mini_1.png');
-                this.load.image('student_3', './images/man_mini_2.png');
-                this.load.image('student_4', './images/woman_mini_2.png');
+                this.load.image('student_1', './public/images/woman_mini_1.png');
+                this.load.image('student_2', './public/images/man_mini_1.png');
+                this.load.image('student_3', './public/images/man_mini_2.png');
+                this.load.image('student_4', './public/images/woman_mini_2.png');
 
                 //Load game fields
-                this.load.image('explode', './images/explode.png');
-                this.load.image('lamp', './images/lamp.png');
-                this.load.image('start', './images/start_field.png');
-                this.load.image('goal', './images/goal_field.png');
-                this.load.image('empty', './images/empty_field.png');
+                this.load.image('explode', './public/images/explode.png');
+                this.load.image('lamp', './public/images/lamp.png');
+                this.load.image('start', './public/images/start_field.png');
+                this.load.image('goal', './public/images/goal_field.png');
+                this.load.image('empty', './public/images/empty_field.png');
 
             } catch (e) {
                 alert('Cant load an image');
@@ -653,7 +659,7 @@
         }
 
         function getDiceImage(number) {
-            const BASE_PATH = './images/';
+            const BASE_PATH = './public/images/';
             switch (number) {
                 case 1: return BASE_PATH + 'dice_one.png';
                 case 2: return BASE_PATH + 'dice_two.png';
@@ -682,6 +688,8 @@
             if (waitForAction) return;
 
             //Würfelzahl ist zu groß, da passend ins Ziel gegangen werden soll
+            //Ziel: 44 Ings: 45
+            //console.log(currentPlayer.field_nr, steps, gamefield_types.length);
             if (currentPlayer.field_nr + steps > gamefield_types.length) {
                 //Reset moving init
                 currentPlayer.field_nr--;
@@ -773,8 +781,8 @@
                     if (steps < 0) currentPlayer.field_nr--;
                 }
                 if (steps === 0) {
-                    setImageAndText();
                     checkWin();
+                    setImageAndText();
 
                     if (!waitForAction) {
                         nextPlayer();
@@ -873,8 +881,9 @@
                 //Game is finished when just one last player has not reached the goal
                 if (playerList.length === 1) {
                     end = true;
-                    alert('Das Spiel ist zu Ende! ' + winner + " hat das Spiel gewonnen. Bitte füllen Sie nun den Post Test aus. Danke für's Spielen!!");
+                    alert('Das Spiel ist zu Ende! ' + winner + " hat das Spiel gewonnen. Bitte füllen Sie nun den Post Test aus. Danke für's Spielen!! \nUmfrage: https://www.survio.com/survey/d/F2O3Y8A4F8W3G2C3V \nOder unten auf dieser Seite");
                     document.getElementById('cube_img').onclick = '';
+                    
                 }
             }
         }
@@ -1024,7 +1033,7 @@
         let ignoreAction = false;
         let executed = false;
          function executeCardAction(action_card) {
-            console.log(action_card.card, currentPlayer.name);
+            //console.log(action_card.card, currentPlayer.name);
             if (action_card === undefined || executed) return;
             steps = action_card.action;
 
@@ -1048,8 +1057,8 @@
 
         }
 
-        function toGoal() {
-            steps = +38;
+        function toGoal(num) {
+            steps = +num;
             currentPlayer.field_nr++;
         }
 

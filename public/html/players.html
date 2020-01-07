@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Characters</title>
-    <link rel="stylesheet" type="text/css" href="stylesheets/players_style.css">
+    <link rel="stylesheet" type="text/css" href="public/stylesheets/players_style.css">
 
     <script>
         let selected_char = "";
@@ -151,15 +151,15 @@
             let story_type = url.searchParams.get("type");
             console.log('init', story_type);
             if (story_type === 'real') {
-                document.getElementById('image_1').src = './images/woman_1.png';
-                document.getElementById('image_2').src = './images/man_1.png';
-                document.getElementById('image_3').src = './images/man_2.png';
-                document.getElementById('image_4').src = './images/woman_2.png';
+                document.getElementById('image_1').src = './public/images/woman_1.png';
+                document.getElementById('image_2').src = './public/images/man_1.png';
+                document.getElementById('image_3').src = './public/images/man_2.png';
+                document.getElementById('image_4').src = './public/images/woman_2.png';
             } else {
-                document.getElementById('image_1').src = './images/monster_red.png';
-                document.getElementById('image_2').src = './images/monster_lightgreen.png';
-                document.getElementById('image_3').src = './images/monster_green.png';
-                document.getElementById('image_4').src = './images/monster_purple.png';
+                document.getElementById('image_1').src = './public/images/monster_red.png';
+                document.getElementById('image_2').src = './public/images/monster_lightgreen.png';
+                document.getElementById('image_3').src = './public/images/monster_green.png';
+                document.getElementById('image_4').src = './public/images/monster_purple.png';
             }
 
         }

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="stylesheets/start_style.css">
+    <link rel="stylesheet" type="text/css" href="public/stylesheets/start_style.css">
 
     <title>A Serious Game - Select story</title>
 </head>
@@ -14,17 +14,23 @@
         <span id="real_story_outer_span" onclick="loadGame('real')">
             <label class="story_desc_label">Studenten</label>
             <br>
-            <img class="story_selection_image" id="img_real" src="./images/student_group.png" alt="Real story image">
+            <img class="story_selection_image" id="img_real" src="./public/images/student_group.png" alt="Real story image">
         </span>
 
         <span id="fictitious_story_outer_span" onclick="loadGame('fictitious')">
 
             <label class="story_desc_label">Badanklas</label>
             <br>
-            <img class="story_selection_image" id="img_fic" src="./images/monster_group.png" alt="Fictitious story image">
+            <img class="story_selection_image" id="img_fic" src="./public/images/monster_group.png" alt="Fictitious story image">
         </span>
     </div>
-
+    <div id='test_div'>
+    <p class='test_p'>Link zum Pre Test:</p>
+    <a href='https://www.survio.com/survey/d/G8W1W1V2A3W1L1X9R'>https://www.survio.com/survey/d/G8W1W1V2A3W1L1X9R</a>
+    <br>
+    <p class='test_p'>Passwort: MR1997</p>
+    <img id='qr_code' src='./public/images/pre_test_code.png'>
+    </div>
     <script>
 
 

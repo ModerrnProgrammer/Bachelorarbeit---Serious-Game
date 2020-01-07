@@ -1,5 +1,5 @@
 body {
-    padding: 30px;
+    padding: 20px;
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
     background-color: #00B7FF;
 }
@@ -7,7 +7,6 @@ body {
 #content {
     margin-left: auto;
     margin-right: auto;
-    zoom: 80%;
 }
 #real_story_outer_span, #fictitious_story_outer_span {
 
@@ -51,7 +50,7 @@ body {
 }
 
 #select_story_p {
-    font-size: 5rem;
+    font-size: 4rem;
     text-align: center;
     margin-left: 13%;
     background-color: #00B7FF;
@@ -63,4 +62,21 @@ body {
 
 #real_story_outer_span, #fictitious_story_outer_span {
     padding: 20px;
+}
+
+#qr_code {
+    width: 200px;
+    height: 200px;
+}
+
+#test_div {
+    position: absolute;
+    top: 85%;
+    left: 5%;
+    padding-bottom: 50px
+}
+
+.test_p, #test_link {
+    font-size: 20px;
+    color: black;
 }

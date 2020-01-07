@@ -1,0 +1,29 @@
+{
+    "version": 2,
+    "builds": [
+        { "src": "index.js", "use": "@now/node-server"}, 
+        { "src": "public/html/**", "use": "@now/static"},
+        { "src": "public/images/**", "use": "@now/static"},
+         { "src": "public/stylesheets/**", "use": "@now/static"}
+    ],
+    "routes": [
+        
+        {
+            "src": "/start",
+            "dest": "/index.js",
+            "methods": ["GET"]
+        },
+        {
+            "src": "/players",
+            "dest": "/index.js",
+            "methods": ["GET"]
+        },
+        {
+            "src": "/game",
+            "dest": "/index.js",
+            "methods": ["GET"]
+        }
+    ]
+
+
+}

@@ -2,20 +2,19 @@
     background-color: #00B7FF;
     margin-left: 20%;
     margin-right: 20%;
-    margin-top: 5%;
+    margin-top: 2%;
     border-style: dotted;
-    height: 70%;
-    zoom: 40%
+    height: 40%;
 }
 
 .player_button {
-    font-size: 3rem;
+    font-size: 20px;
     width: 50%;
-    height: 4rem;
+    height: 3rem;
 }
 
 #new_player_name_p, #new_player_name_textarea {
-    font-size: 3rem;
+    font-size: 30px;
 }
 
 #new_player_name_p {
@@ -25,21 +24,21 @@
 
 #new_player_name_textarea {
     text-align: center;
-    height: 80px;
+    height: 40px;
     width: 70%;
 }
 
 
 img {
-    width: 150px;
-    height: 150px;
+    width: 50px;
+    height: 50px;
 }
 
 #players_headline {
     display: block;
     width: 100%;
     text-align: center;
-    font-size: 4rem;
+    font-size: 50px;
     margin-top: 10px;
 }
 
@@ -84,15 +83,15 @@ img {
 
 
 .mini_image {
-    width: 60px;
-    height: 60px;
+    width: 20px;
+    height: 20px;
 }
 
 
 
 .mini_player_name {
     display: inline-block;
-    font-size: 2rem;
+    font-size: 20px;
     text-align: right;
     width: auto;
 }

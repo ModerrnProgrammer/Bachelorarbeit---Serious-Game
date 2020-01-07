@@ -4,9 +4,28 @@
  * Module dependencies.
  */
 
-var app = require('../app');
 var debug = require('debug')('Games:server');
 var http = require('http');
+var createError = require('http-errors');
+var express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
+var app = express();
+
+
+//APP.JS
+
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(__dirname));
+
+
+
+
+//SERVER
 
 /**
  * Get port from environment and store in Express.
@@ -87,4 +106,34 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
+  console.log('Listening on ' + bind);
 }
+
+/* GET home page. */
+
+app.get('/', function (req, res, next) {
+   //res.send('Heeeello');
+   res.redirect('/start');
+});
+
+app.get('/hi', function(req, res, next) {
+    res.send("Welcome to a basic express App");
+});
+
+app.get('/start', function(req, res, next) {
+    res.sendFile(path.join(__dirname, 'public/html/start.html'));
+});
+
+
+app.get('/players', function(req, res, next) {
+    res.sendFile(path.join(__dirname, 'public/html/players.html'));
+});
+
+
+app.get('/game', function(req, res, next) {
+    res.sendFile(path.join(__dirname, 'public/html/game.html'));
+});
+
+
+
+
