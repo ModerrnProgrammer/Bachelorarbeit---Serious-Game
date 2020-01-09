@@ -1,8 +1,9 @@
 #content {
     background-color: #00B7FF;
-    margin-left: 20%;
-    margin-right: 20%;
+    margin-left: 10%;
+    margin-right: 10%;
     margin-top: 2%;
+
     border-style: dotted;
     height: 40%;
 }
@@ -43,22 +44,15 @@ img {
 }
 
 #new_player_div {
-    margin: 50px;
+    width: 90%;
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 20px;
     background-color: lightskyblue;
     text-align: center;
 }
 
-#new_char_div {
-    background-color: lightskyblue;
-    margin: 25px 50px 50px;
-    text-align: center;
-}
 
-#new_player_div {
-    padding: 5px;
-    text-align: center;
-
-}
 
 #btn_start_game {
     float: right;
@@ -71,7 +65,6 @@ img {
 }
 
 .icon:hover {
-    border-style: solid;
     background-color: red;
 }
 
@@ -100,7 +93,7 @@ img {
     background-color: lightskyblue;
     border-style: dotted;
     margin: 50px;
-    visibility: hidden;
+    display: none;
     text-align: center;
 }
 
@@ -118,4 +111,48 @@ img {
 label {
 	display: block;
 	font-size: 20px;
+}
+#character_story_div {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden; /* if you don't want #second to wrap below #first */
+    background-color: lightskyblue;
+
+}
+
+#new_char_div {
+    background-color: lightskyblue;
+    width: 90%;
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 20px;
+}
+
+#wrapper_images {
+    padding: 20px;
+    overflow: hidden; /* will contain if #first is longer than #second */
+}
+
+#img_div_1, #img_div_3 {
+    width: 50%;
+    float: left;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#img_div_2, #img_div_4 {
+    overflow: hidden;
+    width: 50%;
+}
+
+.center_images_div {
+    border-style: dotted;
+    margin: 10px;
+    padding-left: 40%;
+}
+
+#character_story_head {
+    margin: 5px 5px 5px 0;
+    text-align: center;
 }
