@@ -112,8 +112,8 @@ function onListening() {
 /* GET home page. */
 
 app.get('/', function (req, res, next) {
-   res.send('Das Spiel wird aktuell gewartet. Bitte haben Sie etwas Geduld und probieren Sie es später erneut.');
-   //res.redirect('/start');
+   //res.send('Das Spiel wird aktuell gewartet. Bitte haben Sie etwas Geduld und probieren Sie es später erneut.');
+   res.redirect('/start');
 });
 
 

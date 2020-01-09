@@ -36,7 +36,8 @@
 
             </div>
             <div id="card_bottom">
-                <label id="card_text" onclick="executeCardAction(currentActionCard);"></label>
+                <!--<label id="card_text" onclick="executeCardAction(currentActionCard);"></label>-->
+                <label id="card_text" onclick="showStory(currentPlayer);"></label>
             </div>
         </div>
         <div id='test_div'>
@@ -147,7 +148,7 @@
             "\n" +
             "Viel Erfolg euch!";
 
-		const START_TEXT = "Herzlich Willkommen zum Serious Game by Moritz Rohde. Das Spiel beginnt, indem Sie auf den Würfel klicken. Denken Sie nach dem Spiel an den Post Test. (Jeder Spieler) Der Link dazu ist unten auf dieser Seite. Viel Spaß!"
+		const START_TEXT = "Herzlich Willkommen zum Serious Game by Moritz Rohde. Denken Sie nach dem Spiel an den Post Test. (Jeder Spieler) Der Link dazu ist unten auf dieser Seite. Viel Spaß! Klicken zum Fortfahren.";
 			
 		//Story texts real story
 		const STORY_MELANIE_LORM_SHORT = "Ich bin die Melanie. Ich bin im 8. Semester und studiere Wirtschaftsinformatik.";
@@ -340,17 +341,7 @@
             beforeOverlapping = true;
         }
 
-        function drawCharacters(game) {
 
-            game.add.image(50,50, 'pink_left');
-            game.add.image(100,50, 'pink_right');
-            game.add.image(150,50, 'red_left');
-            game.add.image(200,50, 'red_right');
-            game.add.image(250,50, 'blue_left');
-            game.add.image(300,50, 'blue_right');
-            game.add.image(350,50, 'yellow_left');
-            game.add.image(400,50, 'yellow_right');
-        }
 
         function print_start_fields(game) {
             const start_field_bias = 50;
@@ -694,7 +685,68 @@
 			rect = document.getElementById(CARD_ID).getBoundingClientRect();
 			document.getElementById(CARD_TEXT_ID).style.left = rect.x + 'px';
 		}
-        
+
+		let story_shown_list = [];
+		function showStory(id) {
+            try {
+                console.log('show');
+                //console.log('show', story_shown_list, id.name);
+                let image = id.player.texture.key;
+                for (let i = 0; i < story_shown_list.length; i++) {
+                    if (image === story_shown_list[i]) {
+//list contains id
+                        return;
+                    }
+                }
+                story_shown_list.push(image);
+                //console.log('Do shown');
+                //TODO: If id not contains player list skip
+                let url = new URL(window.location.href);
+                story_type = url.searchParams.get("type");
+
+                if (story_type === 'real') {
+                    switch (image) {
+                        case 'student_1':
+                            document.getElementById(CARD_TEXT_ID).innerText = STORY_MELANIE_LORM_SHORT;
+                            break;
+                        case 'student_2':
+                            document.getElementById(CARD_TEXT_ID).innerText = STORY_MARTIN_KIRTZ_SHORT;
+                            break;
+                        case 'student_3':
+                            document.getElementById(CARD_TEXT_ID).innerText = STORY_JULIAN_KLAPP_SHORT;
+                            break;
+                        case 'student_4':
+                            document.getElementById(CARD_TEXT_ID).innerText = STORY_NINA_KLAMM_SHORT;
+                            break;
+                        default:
+                            return null;
+                    }
+                } else {
+                    switch (image) {
+                        case 'monster_red':
+                            document.getElementById(CARD_TEXT_ID).innerText = STORY_HUMPF_SHORT;
+                            break;
+                        case 'monster_green':
+                            document.getElementById(CARD_TEXT_ID).innerText = STORY_MUMTI_SHORT;
+                            break;
+                        case 'monster_lightgreen':
+                            document.getElementById(CARD_TEXT_ID).innerText = STORY_OPSTI_SHORT;
+                            break;
+                        case 'monster_purple':
+                            document.getElementById(CARD_TEXT_ID).innerText = STORY_WUMSTL_SHORT;
+                            break;
+                        default:
+                            return null;
+                    }
+                }
+                document.getElementById(CARD_TEXT_ID).innerText += '\nKlicke nun auf den Würfel.';
+                document.getElementById(CARD_TEXT_ID).onclick = 'executeCardAction(currentActionCard);';
+                //document.getElementById(CARD_TEXT_ID).onclick = "alert('EXECUTE')";
+            } catch (e) {
+                console.log(e);
+            }
+        }
+
         /** Draw an image related to last printed image position
          *
          * @param game Game to print on
@@ -1015,7 +1067,7 @@
 
         const GIF_DURATION = 1500;
          function setImageAndText() {
-
+            console.log('setImage');
             let type = gamefield_types[currentPlayer.field_nr];
 
             switch (type) {
@@ -1030,6 +1082,13 @@
                     // Reset card and text
                     document.getElementById(CARD_ID).src = EMPTY_FIELD_IMG;
                     document.getElementById(CARD_TEXT_ID).innerText = 'Leeres Feld:\n' + EMPTY_TEXT;
+
+
+                    if (story_shown_list.length < playerList.length) {
+                        document.getElementById(CARD_TEXT_ID).innerText += '\nKlicken zum Fortfahren';
+                        document.getElementById(CARD_TEXT_ID).setAttribute("onClick", "showStory(currentPlayer)");
+                    }
+
                     break;
                 case 1:
                     //Ignore action when reaching field with card action
@@ -1044,6 +1103,11 @@
                     document.getElementById(CARD_TEXT_ID).innerText = 'Wissenskarte:\n' + getKnowledgeText();
 
 
+                    if (story_shown_list.length < playerList.length) {
+                        document.getElementById(CARD_TEXT_ID).innerText += '\nKlicken zum Fortfahren';
+                        document.getElementById(CARD_TEXT_ID).setAttribute("onClick", "showStory(currentPlayer)");
+                    }
+
                     break;
                 case 2:
                     //Ignore action when reaching field with card action
@@ -1052,9 +1116,11 @@
                         break;
                     }
 
+                    console.log('Actioncard');
                     let action_card = getActionText();
                     document.getElementById(CARD_ID).src = ACTION_GIF_FROZEN;
                     document.getElementById(CARD_TEXT_ID).innerText = 'Aktionskarte:\n' +action_card.text + '\nKlicken zum Fortfahren';
+                    document.getElementById(CARD_TEXT_ID).setAttribute("onClick", "executeCardAction(currentActionCard)");
 
                     waitForAction = true;
                     executed = false;
@@ -1081,6 +1147,10 @@
                 default:
                     break;
             }
+
+            document.getElementById(CARD_TEXT_ID).onclick = 'executeCardAction(currentActionCard);';
+
+
         }
 
         function getKnowledgeText() {
@@ -1156,29 +1226,41 @@
         let ignoreAction = false;
         let executed = false;
          function executeCardAction(action_card) {
-            //console.log(action_card.card, currentPlayer.name);
-            if (action_card === undefined || executed) return;
-            steps = action_card.action;
+
+                 console.log('execute:');
+                 //console.log('execute:', action_card.card, currentPlayer.name);
+                 if (action_card === undefined || executed) return;
+                 steps = action_card.action;
 
 
-            //Go forward card
-            if (steps > 0) currentPlayer.field_nr++;
-            //Go back card
-            if (steps < 0) currentPlayer.field_nr--;
+                 //Go forward card
+                 if (steps > 0) currentPlayer.field_nr++;
+                 //Go back card
+                 if (steps < 0) currentPlayer.field_nr--;
 
-            //New science card
-            if (action_card.card === 1) {
-                document.getElementById(CARD_TEXT_ID).innerText = getKnowledgeText();
-                document.getElementById(CARD_ID).src = KNOWLEDGE_GIF_FROZEN;
-            } else {
-                document.getElementById(CARD_TEXT_ID).innerText = '';
-            }
+                 //New science card
+                 if (action_card.card === 1) {
+                     document.getElementById(CARD_TEXT_ID).innerText = getKnowledgeText();
+                     document.getElementById(CARD_ID).src = KNOWLEDGE_GIF_FROZEN;
+                 } else {
+                     document.getElementById(CARD_TEXT_ID).innerText = '';
+                 }
 
-            ignoreAction = true;
-            waitForAction= false;
-            executed = true;
+                 ignoreAction = true;
+                 waitForAction = false;
+                 executed = true;
 
-        }
+                 console.log(story_shown_list.length, playerList.length);
+
+                 if (story_shown_list.length < playerList.length) {
+                     document.getElementById(CARD_TEXT_ID).setAttribute("onClick", "showStory(currentPlayer)");
+                     //TODO: KLick to contine
+
+                 }
+
+
+
+         }
 
         function toGoal(num) {
             steps = +num;
