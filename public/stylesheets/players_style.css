@@ -83,8 +83,8 @@ img {
 
 
 .mini_image {
-    width: 20px;
-    height: 20px;
+    width: 25px;
+    height: 25px;
 }
 
 
@@ -106,4 +106,16 @@ img {
 
 .choose_players_char {
     margin-top: 5px;
+}
+
+#created_players_p{
+	font-size: 2rem;
+	text-align: center;
+	margin-bottom: 0px;
+	margin-top: 5px;
+}
+
+label {
+	display: block;
+	font-size: 20px;
 }

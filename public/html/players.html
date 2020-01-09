@@ -16,34 +16,37 @@
             try {
                 //Check if there is a char selected
                 if (selected_char === '') {
-                    alert('Please select a character!');
+                    alert('Bitte wählen Sie einen Charakter aus!');
                     return;
                 }
-
+				
                 let name = document.getElementById('new_player_name_textarea').value;
 
                 //Check if there is a char selected
                 if (name === '') {
-                    alert('Name can not be empty!');
+                    alert('Der Name darf nicht leer sein!');
                     return;
                 }
-
-
+				
+				
                 //Check if name is already chosen
                 let i = 0;
 
+				
                 for(i in players_name_list) {
-                    console.log(i, name);
                     if (players_name_list[i] === name) {
-                        alert('Please choose a different name');
+                        alert('Dieser Name ist bereits in der Spielerliste eingetragen. Wählen Sie bitte einen anderen.');
                         document.getElementById('new_player_name_textarea').value = '';
                         return;
                     }
 
                 }
+				
+				//Change visibility of player list
+				document.getElementById('created_players_div').visibility = 'visible';
+
                 players_list.push('{"name":"' + name + '", "image":"' + getImage(selected_char) + '"}');
                 players_name_list.push(name);
-                console.log(players_list);
 
                 //Clear fields and add a gray filter
                 document.getElementById('new_player_name_textarea').value = '';
@@ -51,6 +54,7 @@
                 document.getElementById(selected_char).style.webkitFilter = 'grayscale(0.9)';
                 document.getElementById(selected_char).style.background = "lightskyblue";
                 document.getElementById(selected_char).onclick = '';
+				document.getElementById(selected_char).className = '';
 
                 //If max. 4 Players has been selected
                 if (players_name_list.length === 4) {
@@ -71,7 +75,7 @@
                 label.className = 'mini_player_name';
 
                 let img = document.createElement('img');
-                img.src = document.getElementById(selected_char).childNodes[1].src;
+                img.src = document.getElementById(selected_char).childNodes[3].src;
                 img.className = 'mini_image';
 
                 div.appendChild(label);
@@ -90,24 +94,40 @@
         function startGame() {
 
             if (players_list.length < 2) {
-                alert('The game requires a minimum of two players');
+                alert('Achtung! Das Spiel erfordert ein Minimum von zwei Spielern!');
                 return;
             }
+			
+			if(confirm('Eingetragene Spieler: ' + players_name_list + '\nSind alle Spieler eingetragen?')) {
+				
+			
 
-            let new_url = window.location.protocol + '//' + window.location.host + '/game';
-            let old_url = new URL(window.location.href);
+				let new_url = window.location.protocol + '//' + window.location.host + '/game';
+				let old_url = new URL(window.location.href);
 
 
-            let story_type = old_url.searchParams.get("type");
-            const querystring = encodeQueryData(players_list);
+				let story_type = old_url.searchParams.get("type");
+				const querystring = encodeQueryData(players_list);
 
-            new_url = new_url + '?type=' + story_type + '&' + querystring;
-            window.location.replace(new_url);
+				new_url = new_url + '?type=' + story_type + '&' + querystring;
+				window.location.replace(new_url);
+			} else {
+				//Rote Markiertung geht nicht weg
+			}
         }
 
         function selectImage(image, color) {
+			let icons = document.getElementsByClassName('icon');
+			
+			for(let index = 0; index < icons.length; index++) {
+				console.log(index);
+				console.log(icons[index].id);
+				console.log(document.getElementById(icons[index].id));
+				if (icons[index] === image.id || icons[index] === 'undefined' || icons[index] === null) continue;
+				document.getElementById(icons[index].id).style.background = "#87CEFA";
+			}
+			
             document.getElementById(image.id).style.background = "#f00";
-            document.getElementById(image.id).className = '';
             selected_char = image.id;
 
         }
@@ -149,17 +169,25 @@
         function initImages() {
             let url = new URL(window.location.href);
             let story_type = url.searchParams.get("type");
-            console.log('init', story_type);
             if (story_type === 'real') {
                 document.getElementById('image_1').src = './public/images/woman_1.png';
                 document.getElementById('image_2').src = './public/images/man_1.png';
                 document.getElementById('image_3').src = './public/images/man_2.png';
                 document.getElementById('image_4').src = './public/images/woman_2.png';
+                document.getElementById('label_1').innerHTML = 'Melanie Lorm ';
+                document.getElementById('label_2').innerHTML = 'Martin Kirtz';
+                document.getElementById('label_3').innerHTML = 'Julian Lapp';
+                document.getElementById('label_4').innerHTML = 'Nina Klamm';
+				
             } else {
                 document.getElementById('image_1').src = './public/images/monster_red.png';
                 document.getElementById('image_2').src = './public/images/monster_lightgreen.png';
                 document.getElementById('image_3').src = './public/images/monster_green.png';
                 document.getElementById('image_4').src = './public/images/monster_purple.png';
+				document.getElementById('label_1').innerHTML = 'Humpf';
+                document.getElementById('label_2').innerHTML = 'Mumit';
+                document.getElementById('label_3').innerHTML = 'Opsti';
+                document.getElementById('label_4').innerHTML = 'Wumstl';
             }
 
         }
@@ -178,26 +206,31 @@
     </div>
 
     <div id="created_players_div">
+	<p id='created_players_p'><b>Eingetragene Spieler:</p>
     </div>
 
     <div id="new_char_div">
         <div class="icon" id="img_div_1" onclick="selectImage(this);">
+			<label id='label_1'></label>
             <img id="image_1" class="choose_players_char" src="">
         </div>
         <div class="icon" id="img_div_2" onclick="selectImage(this);">
+			<label id='label_2'></label>
             <img id="image_2" class="choose_players_char" src="">
         </div>
         <div class="icon" id="img_div_3" onclick="selectImage(this);">
+			<label id='label_3'></label>
             <img id="image_3" class="choose_players_char" src="">
         </div>
         <div class="icon" id="img_div_4" onclick="selectImage(this);">
+			<label id='label_4'></label>
             <img id="image_4" class="choose_players_char" src="">
         </div>
 
     </div>
     <div id="player_buttons">
-        <button class="player_button" id="btn_next_player" onclick="nextPlayer()">Nächster Spieler</button>
-        <button class="player_button" id="btn_start_game" onclick="startGame()">Zum Spiel</button>
+        <button class="player_button" id="btn_next_player" onclick="nextPlayer()">Spieler eintragen</button>
+        <button class="player_button" id="btn_start_game" onclick="startGame()">Spiel starten</button>
     </div>
 
 </div>

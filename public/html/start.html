@@ -10,7 +10,8 @@
 
 <div id="content">
     <div id="images_div">
-        <p id="select_story_p">Auswahl der Spielgeschichte</p>
+        <p id="select_story_p">Auswahl der Spielgeschichte und der Charaktere</p>
+		<p id='pre_test_hint'>Bitte führen Sie vor dem Spiel den Pre Test durch! (Jeder Spieler) Der Link ist unten.</p>
         <span id="real_story_outer_span" onclick="loadGame('real')">
             <label class="story_desc_label">Studenten</label>
             <br>
@@ -25,10 +26,11 @@
         </span>
     </div>
     <div id='test_div'>
-    <p class='test_p'>Link zum Pre Test:</p>
-    <a href='https://www.survio.com/survey/d/G8W1W1V2A3W1L1X9R'>https://www.survio.com/survey/d/G8W1W1V2A3W1L1X9R</a>
+    <p class='test_p'>Direkter Link zum Pre Test:</p>
+    <a class='test_p' href='https://www.survio.com/survey/d/G8W1W1V2A3W1L1X9R'>https://www.survio.com/survey/d/G8W1W1V2A3W1L1X9R</a>
     <br>
-    <p class='test_p'>Passwort: MR1997</p>
+	<p class='test_p'>QR-Code scannen, um zum Pre Test zu gelangen:</p>
+	<br>
     <img id='qr_code' src='./public/images/pre_test_code.png'>
     </div>
     <script>

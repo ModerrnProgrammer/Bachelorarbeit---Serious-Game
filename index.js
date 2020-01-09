@@ -112,13 +112,10 @@ function onListening() {
 /* GET home page. */
 
 app.get('/', function (req, res, next) {
-   //res.send('Heeeello');
-   res.redirect('/start');
+   res.send('Das Spiel wird aktuell gewartet. Bitte haben Sie etwas Geduld und probieren Sie es später erneut.');
+   //res.redirect('/start');
 });
 
-app.get('/hi', function(req, res, next) {
-    res.send("Welcome to a basic express App");
-});
 
 app.get('/start', function(req, res, next) {
     res.sendFile(path.join(__dirname, 'public/html/start.html'));

@@ -22,7 +22,7 @@
         <div id="card_div">
             <div id="current_player_and_cube_div">
                 <img id="cube_img" src="./public/images/dice_one.png" onclick="roll_the_dice()">
-                <span id="current_player_name_span">Aktuller Spieler:</span>
+                <span id="current_player_name_span">Aktueller Spieler:</span>
                 <br>
                 <span id="current_player_name_label"></span>
             </div>
@@ -40,12 +40,12 @@
             </div>
         </div>
         <div id='test_div'>
-            <button onclick='toGoal(38)'>38</button>
-            <button onclick='toGoal(6)'>6</button>
-            <p class='test_p'>Link zum Pre Test:</p>
+            <p class='test_p'>Link zum Post Test:</p>
             <a id='test_link' href='https://www.survio.com/survey/d/F2O3Y8A4F8W3G2C3V'>https://www.survio.com/survey/d/F2O3Y8A4F8W3G2C3V</a>
-            <p class='test_p'>Passwort: MR1709</p>
-            <img id='qr_code' src='./public/images/post_test_code.png'>
+            <br>
+			<p class='test_p'>Oder den QR-Code scannen (Handy Kamera), um zum Post Test zu gelangen:</p>
+			<br>
+			<img id='qr_code' src='./public/images/post_test_code.png'>
         </div>
 
     </div>
@@ -147,6 +147,119 @@
             "\n" +
             "Viel Erfolg euch!";
 
+		const START_TEXT = "Herzlich Willkommen zum Serious Game by Moritz Rohde. Das Spiel beginnt, indem Sie auf den Würfel klicken. Denken Sie nach dem Spiel an den Post Test. (Jeder Spieler) Der Link dazu ist unten auf dieser Seite. Viel Spaß!"
+			
+		//Story texts real story
+		const STORY_MELANIE_LORM_SHORT = "Ich bin die Melanie. Ich bin im 8. Semester und studiere Wirtschaftsinformatik.";
+		const STORY_MELANIE_LORM = "Es ist das Jahr 2017 in Deutschland.\n" +
+            "\n" +
+            "Du bist Melanie Lorm und Bachelorstudentin Wirtschaftsinformatik im 8. Semester an der TU Braunschweig. In den letzten Wochen bestand dein Tagesablauf hauptsächlich aus Bachelorarbeit schreiben, Freunde treffen, chillen und vor allem Feiern. Du bist inzwischen in den letzten Zügen deiner Bachelorarbeit und wünscht dir immer mehr, möglichst schnell in das Berufsleben zu starten und endlich dein erstes eigenes Geld verdienen. Ganz zu schweigen davon, nie wieder eine Klausur oder Abschlussarbeit schreiben zu müssen.\n" +
+            "\n" +
+            "Vor einigen Tagen hast du gehört, dass eine Trainee Stelle in einem großen Unternehmen in deiner Gegend frei geworden ist. Von einer solchen Chance hast du schon lange geträumt. Um diese Stelle zu bekommen, musst du allerdings einen guten Notenschnitt nachweisen. Dabei bieten sich die letzten Klausuren, Seminarpräsentationen, mündlichen Prüfungen und das Kolloquium mit der Abschlusspräsentation an, um deinen Schnitt zu heben und dich deinem Ziel zu nähern. Da du in der Vergangenheit jedoch nie gut im Präsentieren gewesen bist und diese Chance nicht vergeigen willst, musst du jetzt alles geben, um dich fit zum Präsentieren zu machen.\n" +
+            "\n" +
+            "Deine Aufgabe ist es, dich so schnell wie möglich fit für die Abschlusspräsentation zu machen. Du hast gehört, dass die anderen Bewerber für die Traineestelle ähnliche Schwierigkeiten mit dem Präsentieren haben, sodass es jetzt nur noch darum geht, so schnell wie möglich eine perfekte Präsentation abzuhalten.\n" +
+            "\n" +
+            "Wenn du als erster vor den anderen Bewerbern mit einer überzeugenden Abschlusspräsentation für dich punkten kannst, wirst du deine lang erträumte Traumstelle erhalten.\n" +
+            "\n" +
+            "[Gelange so schnell wie möglich vom Start aus bis zum Ziel. Versuche dabei jeden Hinweis, den du (oder ein Mitspieler) während des Spiels zum Präsentieren erhältst, zu erlernen. Mit deinen neuen Fähigkeiten wirst du nachher hervorragend präsentieren]\n" +
+            "\n" +
+            "Viel Erfolg.\n";
+		const STORY_MARTIN_KIRTZ_SHORT  = "Ich bin der Martin und ich bin im 6. Semester und studiere Maschbau.";
+		const STORY_MARTIN_KIRTZ = "Es ist das Jahr 2017 in Deutschland.\n" +
+            "\n" +
+            "Du bist Martin Kirtz und Bachelorstudent Maschinenbau im 6. Semester an der TU Braunschweig. In den letzten Wochen bestand dein Tagesablauf hauptsächlich aus Bachelorarbeit schreiben, Freunde treffen, chillen und vor allem Feiern. Du bist inzwischen in den letzten Zügen deiner Bachelorarbeit und wünscht dir immer mehr, möglichst schnell in das Berufsleben zu starten und endlich dein erstes eigenes Geld verdienen. Ganz zu schweigen davon, nie wieder eine Klausur oder Abschlussarbeit schreiben zu müssen.\n" +
+            "\n" +
+            "Vor einigen Tagen hast du gehört, dass eine Trainee Stelle in einem großen Unternehmen in deiner Gegend frei geworden ist. Von einer solchen Chance hast du schon lange geträumt. Um diese Stelle zu bekommen, musst du allerdings einen guten Notenschnitt nachweisen. Dabei bieten sich die letzten Klausuren, Seminarpräsentationen, mündlichen Prüfungen und das Kolloquium mit der Abschlusspräsentation an, um deinen Schnitt zu heben und dich deinem Ziel zu nähern. Da du in der Vergangenheit jedoch nie gut im Präsentieren gewesen bist und diese Chance nicht vergeigen willst, musst du jetzt alles geben, um dich fit zum Präsentieren zu machen.\n" +
+            "\n" +
+            "Deine Aufgabe ist es, dich so schnell wie möglich fit für die Abschlusspräsentation zu machen. Du hast gehört, dass die anderen Bewerber für die Traineestelle ähnliche Schwierigkeiten mit dem Präsentieren haben, sodass es jetzt nur noch darum geht, so schnell wie möglich eine perfekte Präsentation abzuhalten.\n" +
+            "\n" +
+            "Wenn du als erster vor den anderen Bewerbern mit einer überzeugenden Abschlusspräsentation für dich punkten kannst, wirst du deine lang erträumte Traumstelle erhalten.\n" +
+            "\n" +
+            "[Gelange so schnell wie möglich vom Start aus bis zum Ziel. Versuche dabei jeden Hinweis, den du (oder ein Mitspieler) während des Spiels zum Präsentieren erhältst, zu erlernen. Mit deinen neuen Fähigkeiten wirst du nachher hervorragend präsentieren]\n" +
+            "\n" +
+            "Viel Erfolg.\n";
+		const STORY_JULIAN_KLAPP_SHORT  = "Ich bin der Julian und ich studiere Wirtschaftsinformatik. Ich bin im 5. Semester.";
+		const STORY_JULIAN_KLAPP = "Es ist das Jahr 2017 in Deutschland.\n" +
+            "\n" +
+            "Du bist Julian Lapp und Bachelorstudent Wirtschaftsinformatik im 5. Semester an der TU Braunschweig. In den letzten Wochen bestand dein Tagesablauf hauptsächlich aus Bachelorarbeit schreiben, Freunde treffen, chillen und vor allem Feiern. Du bist inzwischen in den letzten Zügen deiner Bachelorarbeit und wünscht dir immer mehr, möglichst schnell in das Berufsleben zu starten und endlich dein erstes eigenes Geld verdienen. Ganz zu schweigen davon, nie wieder eine Klausur oder Abschlussarbeit schreiben zu müssen.\n" +
+            "\n" +
+            "Vor einigen Tagen hast du gehört, dass eine Trainee Stelle in einem großen Unternehmen in deiner Gegend frei geworden ist. Von einer solchen Chance hast du schon lange geträumt. Um diese Stelle zu bekommen, musst du allerdings einen guten Notenschnitt nachweisen. Dabei bieten sich die letzten Klausuren, Seminarpräsentationen, mündlichen Prüfungen und das Kolloquium mit der Abschlusspräsentation an, um deinen Schnitt zu heben und dich deinem Ziel zu nähern. Da du in der Vergangenheit jedoch nie gut im Präsentieren gewesen bist und diese Chance nicht vergeigen willst, musst du jetzt alles geben, um dich fit zum Präsentieren zu machen.\n" +
+            "\n" +
+            "Deine Aufgabe ist es, dich so schnell wie möglich fit für die Abschlusspräsentation zu machen. Du hast gehört, dass die anderen Bewerber für die Traineestelle ähnliche Schwierigkeiten mit dem Präsentieren haben, sodass es jetzt nur noch darum geht, so schnell wie möglich eine perfekte Präsentation abzuhalten.\n" +
+            "\n" +
+            "Wenn du als erster vor den anderen Bewerbern mit einer überzeugenden Abschlusspräsentation für dich punkten kannst, wirst du deine lang erträumte Traumstelle erhalten.\n" +
+            "\n" +
+            "[Gelange so schnell wie möglich vom Start aus bis zum Ziel. Versuche dabei jeden Hinweis, den du (oder ein Mitspieler) während des Spiels zum Präsentieren erhältst, zu erlernen. Mit deinen neuen Fähigkeiten wirst du nachher hervorragend präsentieren]\n" +
+            "\n" +
+            "Viel Erfolg.\n";
+		const STORY_NINA_KLAMM_SHORT  = "Ich bin die Nina und ich studiere Wirtschaftsingenieurwesen im 7. Semester.";
+		const STORY_NINA_KLAMM = "Es ist das Jahr 2017 in Deutschland.\n" +
+            "\n" +
+            "Du bist Nina Klamm und Bachelorstudentin Wirtschaftsingenieurwesen im 7. Semester an der TU Braunschweig. In den letzten Wochen bestand dein Tagesablauf hauptsächlich aus Bachelorarbeit schreiben, Freunde treffen, chillen und vor allem Feiern. Du bist inzwischen in den letzten Zügen deiner Bachelorarbeit und wünscht dir immer mehr, möglichst schnell in das Berufsleben zu starten und endlich dein erstes eigenes Geld verdienen. Ganz zu schweigen davon, nie wieder eine Klausur oder Abschlussarbeit schreiben zu müssen.\n" +
+            "\n" +
+            "Vor einigen Tagen hast du gehört, dass eine Trainee Stelle in einem großen Unternehmen in deiner Gegend frei geworden ist. Von einer solchen Chance hast du schon lange geträumt. Um diese Stelle zu bekommen, musst du allerdings einen guten Notenschnitt nachweisen. Dabei bieten sich die letzten Klausuren, Seminarpräsentationen, mündlichen Prüfungen und das Kolloquium mit der Abschlusspräsentation an, um deinen Schnitt zu heben und dich deinem Ziel zu nähern. Da du in der Vergangenheit jedoch nie gut im Präsentieren gewesen bist und diese Chance nicht vergeigen willst, musst du jetzt alles geben, um dich fit zum Präsentieren zu machen.\n" +
+            "\n" +
+            "Deine Aufgabe ist es, dich so schnell wie möglich fit für die Abschlusspräsentation zu machen. Du hast gehört, dass die anderen Bewerber für die Traineestelle ähnliche Schwierigkeiten mit dem Präsentieren haben, sodass es jetzt nur noch darum geht, so schnell wie möglich eine perfekte Präsentation abzuhalten.\n" +
+            "\n" +
+            "Wenn du als erster vor den anderen Bewerbern mit einer überzeugenden Abschlusspräsentation für dich punkten kannst, wirst du deine lang erträumte Traumstelle erhalten.\n" +
+            "\n" +
+            "[Gelange so schnell wie möglich vom Start aus bis zum Ziel. Versuche dabei jeden Hinweis, den du (oder ein Mitspieler) während des Spiels zum Präsentieren erhältst, zu erlernen. Mit deinen neuen Fähigkeiten wirst du nachher hervorragend präsentieren]\n" +
+            "\n" +
+            "Viel Erfolg.\n";
+
+		//Story texts fictitious story
+
+        const STORY_HUMPF_SHORT = "Ich bin der Humpf. Und ich habe Münzen beantragt, um den Ausbau der Himberrsträucher voranzutreiben.";
+		const STORY_HUMPF = "Es ist das Jahr 75x4 in Bidinkli.\n" +
+            "\n" +
+            "Du bist ein Badankla. Dein Name ist Humpf. Du hast Münzen beim Rat der großen Bedinklos beantragt, um den Ausbau der Himbeersträucher voranzutreiben. Himbeeren sind nämlich die Leibspeise der Balankas.\n" +
+            "\n" +
+            "Humpf, deine Aufgabe ist es, die notwendigen Münzen für dein Vorhaben vom Rat der großen Bedinklos zu erhalten. Allerdings sind die Münzen des Rats der großen Bedinklos begrenzt und du hast erfahren, dass weitere Badanklas Münzen für ihre Vorhaben beantragt haben. Du weißt, dass der Badankla, der sein Vorhaben am besten präsentieren wird, die Münzen erhält.\n" +
+            "\n" +
+            "Du weißt, dass du nicht die besten Präsentationen halten kannst. Deshalb ist das letzte Problem, das es für dich zu lösen gilt, die Verbesserung deiner Präsentationskompetenz, um den überzeugendsten Vortrag zu halten.\n" +
+            "\n" +
+            "[Gelange so schnell wie möglich vom Start aus bis zum Ziel. Versuche dabei jeden Hinweis, den du (oder ein Mitspieler) während des Spiels zum Präsentieren erhältst, zu erlernen. Mit deinen neuen Fähigkeiten wirst du nachher hervorragend präsentieren]\n" +
+            "\n" +
+            "Viel Erfolg, Humpf.\n";
+		const STORY_MUMTI_SHORT  = "Ich bin der Mumit. Und ich habe Münzen beantragt, um den Ausbau der Kiesstrände voranzutreiben.";
+		const STORY_MUMTI = "Es ist das Jahr 75x4 in Bidinkli.\n" +
+            "\n" +
+            "Du bist ein Badankla. Dein Name ist Mumit. Du hast Münzen beim Rat der großen Bedinklos beantragt, um den Ausbau der Kiesstrände voranzutreiben. An Kiesstränden rumzuliegen, ist nämlich das größte Hobby der Badanklas.\n" +
+            "\n" +
+            "Mumit, deine Aufgabe ist es, die notwendigen Münzen für dein Vorhaben vom Rat der großen Bedinklos zu erhalten. Allerdings sind die Münzen des Rats der großen Bedinklos begrenzt und du hast erfahren, dass weitere Badanklas Münzen für ihre Vorhaben beantragt haben. Du weißt, dass der Badankla, der sein Vorhaben am besten präsentieren wird, die Münzen erhält.\n" +
+            "\n" +
+            "Du weißt, dass du nicht die besten Präsentationen halten kannst. Deshalb ist das letzte Problem, das es für dich zu lösen gilt, die Verbesserung deiner Präsentationskompetenz, um den überzeugendsten Vortrag zu halten.\n" +
+            "\n" +
+            "[Gelange so schnell wie möglich vom Start aus bis zum Ziel. Versuche dabei jeden Hinweis, den du (oder ein Mitspieler) während des Spiels zum Präsentieren erhältst, zu erlernen. Mit deinen neuen Fähigkeiten wirst du nachher hervorragend präsentieren]\n" +
+            "\n" +
+            "Viel Erfolg, Mumit.\n";
+		const STORY_OPSTI_SHORT  = "Ich bin der Opsti. Und ich habe Münzen beantragt, um den Ausbau der Fabrik für unsichtbare Kugelschreiber voranzutreiben.\n";
+		const STORY_OPSTI = "Es ist das Jahr 75x4 in Bidinkli.\n" +
+            "\n" +
+            "Du bist ein Badankla. Dein Name ist Opsti. Du hast Münzen beim Rat der großen Bedinklos beantragt, um den Ausbau der Fabrik für unsichtbare Kugelschreiber voranzutreiben. Unsichtbare Kugelschreiber sind nämlich die liebsten Stifte der Balankas.\n" +
+            "\n" +
+            "Opsti, deine Aufgabe ist es, die notwendigen Münzen für dein Vorhaben vom Rat der großen Bedinklos zu erhalten. Allerdings sind die Münzen des Rats der großen Bedinklos begrenzt und du hast erfahren, dass weitere Badanklas Münzen für ihre Vorhaben beantragt haben. Du weißt, dass der Badankla, der sein Vorhaben am besten präsentieren wird, die Münzen erhält.\n" +
+            "\n" +
+            "Du weißt, dass du nicht die besten Präsentationen halten kannst. Deshalb ist das letzte Problem, das es für dich zu lösen gilt, die Verbesserung deiner Präsentationskompetenz, um den überzeugendsten Vortrag zu halten.\n" +
+            "\n" +
+            "[Gelange so schnell wie möglich vom Start aus bis zum Ziel. Versuche dabei jeden Hinweis, den du (oder ein Mitspieler) während des Spiels zum Präsentieren erhältst, zu erlernen. Mit deinen neuen Fähigkeiten wirst du nachher hervorragend präsentieren]\n" +
+            "\n" +
+            "Viel Erfolg, Opsti.\n";
+		const STORY_WUMSTL_SHORT  = "Ich bin der Wumstl. Und ich habe Münzen beantragt, um den Ausbau der Fabrik für rote Turnbeutel voranzutreiben.";
+		const STORY_WUMSTL = "Es ist das Jahr 75x4 in Bidinkli. \n" +
+            "\n" +
+            "Du bist ein Badankla. Dein Name ist Wumstl. Du hast Münzen beim Rat der großen Bedinklos beantragt, um den Ausbau der Fabrik für rote Turnbeutel voranzutreiben. Rote Turnbeutel sind nämlich die liebsten Taschen der Balankas.\n" +
+            "\n" +
+            "Wumstl, deine Aufgabe ist es, die notwendigen Münzen für dein Vorhaben vom Rat der großen Bedinklos zu erhalten. Allerdings sind die Münzen des Rats der großen Bedinklos begrenzt und du hast erfahren, dass weitere Badanklas Münzen für ihre Vorhaben beantragt haben. Du weißt, dass der Badankla, der sein Vorhaben am besten präsentieren wird, die Münzen erhält.\n" +
+            "\n" +
+            "Du weißt, dass du nicht die besten Präsentationen halten kannst. Deshalb ist das letzte Problem, das es für dich zu lösen gilt, die Verbesserung deiner Präsentationskompetenz, um den überzeugendsten Vortrag zu halten. \n" +
+            "\n" +
+            "[Gelange so schnell wie möglich vom Start aus bis zum Ziel. Versuche dabei jeden Hinweis, den du (oder ein Mitspieler) während des Spiels zum Präsentieren erhältst, zu erlernen. Mit deinen neuen Fähigkeiten wirst du nachher hervorragend präsentieren.]\n" +
+            "\n" +
+            "Viel Erfolg, Wumstl.\n";
+
+			
+			
         function preload () {
             try {
 
@@ -192,7 +305,7 @@
                 loadParameters(this);
 
                 initStoryText();
-
+				initCardValue();
                 nextPlayer();
                 checkOverlappingAfter(25);
 
@@ -571,6 +684,16 @@
                 ' "action": -100, "card": 0}' +
                 ']');
         }
+		
+		function initCardValue() {
+			document.getElementById(CARD_TEXT_ID).innerText = START_TEXT;
+			checkCardTextPosition();
+		}
+		
+		function checkCardTextPosition() {
+			rect = document.getElementById(CARD_ID).getBoundingClientRect();
+			document.getElementById(CARD_TEXT_ID).style.left = rect.x + 'px';
+		}
         
         /** Draw an image related to last printed image position
          *
@@ -675,7 +798,7 @@
         function update() {
 
             if (end) return;
-
+			checkCardTextPosition();
             if (steps !== 0) {
                 check_move_states();
             }

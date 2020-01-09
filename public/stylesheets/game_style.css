@@ -57,7 +57,7 @@ label {
     width: 321px;
     height: 585px;
     color: black;
-    padding: 15px 15px 0;
+    padding: 20px 20px 0;
     z-index: 4;
     border-style: none;
 }
@@ -152,7 +152,7 @@ label {
 
 #current_player_name_label {
     display: block;
-    font-size: 45px;
+    font-size: 25px;
 }
 
 #qr_code {
@@ -162,12 +162,13 @@ label {
 
 #test_div {
     position: absolute;
-    top: 85%;
-    left: 10%;
+	padding-top: 25px;
+    left: 8%;
     padding-bottom: 50px
 }
 
-.test_p, a {
+.test_p, #test_link {
     font-size: 20px;
     color: black;
+	display: inline;
 }
