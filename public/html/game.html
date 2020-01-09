@@ -37,7 +37,7 @@
             </div>
             <div id="card_bottom">
                 <!--<label id="card_text" onclick="executeCardAction(currentActionCard);"></label>-->
-                <label id="card_text" onclick="showStory(currentPlayer);"></label>
+                <label id="card_text" onclick="executeCardAction(currentActionCard);"></label>
             </div>
         </div>
         <div id='test_div'>
@@ -622,7 +622,7 @@
                 '{"text":"Du gehst im Vorfeld schon mögliche Fragen des Rats der großen Bedinklos durch, ' +
                 'damit du besser darauf vorbereitet bist. Gehe zwei Schritte vor.",' +
                 ' "action": 2, "card": 0},' +
-                '{"text":"Weil du die Präsentation so lange vor der hergeschoben hast,' +
+                '{"text":"Weil du die Präsentation so lange vor dir hergeschoben hast,' +
                 ' hast du jetzt keine Zeit mehr mit aktuellen Zahlen zu arbeiten. ' +
                 'Stattdessen musst du veraltete Werte zur Lage aus Bidinkli verwenden. ' +
                 'Gehe zwei Schritte zurück und ziehe eine Wissenskarte.",' +
@@ -688,9 +688,8 @@
 
 		let story_shown_list = [];
 		function showStory(id) {
+		    story_hidden = true;
             try {
-                console.log('show');
-                //console.log('show', story_shown_list, id.name);
                 let image = id.player.texture.key;
                 for (let i = 0; i < story_shown_list.length; i++) {
                     if (image === story_shown_list[i]) {
@@ -699,7 +698,7 @@
                     }
                 }
                 story_shown_list.push(image);
-                //console.log('Do shown');
+
                 //TODO: If id not contains player list skip
                 let url = new URL(window.location.href);
                 story_type = url.searchParams.get("type");
@@ -740,8 +739,8 @@
                     }
                 }
                 document.getElementById(CARD_TEXT_ID).innerText += '\nKlicke nun auf den Würfel.';
-                document.getElementById(CARD_TEXT_ID).onclick = 'executeCardAction(currentActionCard);';
-                //document.getElementById(CARD_TEXT_ID).onclick = "alert('EXECUTE')";
+                document.getElementById(CARD_ID).src = EMPTY_FIELD_IMG;
+
             } catch (e) {
                 console.log(e);
             }
@@ -863,8 +862,7 @@
             if (waitForAction) return;
 
             //Würfelzahl ist zu groß, da passend ins Ziel gegangen werden soll
-            //Ziel: 44 Ings: 45
-            //console.log(currentPlayer.field_nr, steps, gamefield_types.length);
+
             if (currentPlayer.field_nr + steps > gamefield_types.length) {
                 //Reset moving init
                 currentPlayer.field_nr--;
@@ -1067,7 +1065,6 @@
 
         const GIF_DURATION = 1500;
          function setImageAndText() {
-            console.log('setImage');
             let type = gamefield_types[currentPlayer.field_nr];
 
             switch (type) {
@@ -1084,9 +1081,10 @@
                     document.getElementById(CARD_TEXT_ID).innerText = 'Leeres Feld:\n' + EMPTY_TEXT;
 
 
-                    if (story_shown_list.length < playerList.length) {
+                    if (story_shown_list.length < playerList.length && winnerList.length === 0) {
+                        showStoryCard = true;
                         document.getElementById(CARD_TEXT_ID).innerText += '\nKlicken zum Fortfahren';
-                        document.getElementById(CARD_TEXT_ID).setAttribute("onClick", "showStory(currentPlayer)");
+
                     }
 
                     break;
@@ -1103,9 +1101,10 @@
                     document.getElementById(CARD_TEXT_ID).innerText = 'Wissenskarte:\n' + getKnowledgeText();
 
 
-                    if (story_shown_list.length < playerList.length) {
+                    if (story_shown_list.length < playerList.length && winnerList.length === 0) {
+                        showStoryCard2 = true;
                         document.getElementById(CARD_TEXT_ID).innerText += '\nKlicken zum Fortfahren';
-                        document.getElementById(CARD_TEXT_ID).setAttribute("onClick", "showStory(currentPlayer)");
+
                     }
 
                     break;
@@ -1116,16 +1115,17 @@
                         break;
                     }
 
-                    console.log('Actioncard');
                     let action_card = getActionText();
                     document.getElementById(CARD_ID).src = ACTION_GIF_FROZEN;
                     document.getElementById(CARD_TEXT_ID).innerText = 'Aktionskarte:\n' +action_card.text + '\nKlicken zum Fortfahren';
-                    document.getElementById(CARD_TEXT_ID).setAttribute("onClick", "executeCardAction(currentActionCard)");
 
                     waitForAction = true;
                     executed = false;
                     currentActionCard = action_card;
 
+                    if (story_shown_list.length < playerList.length && winnerList.length === 0) {
+                        showStoryCard = true;
+                    }
                     break;
                 case 3:
 
@@ -1147,8 +1147,6 @@
                 default:
                     break;
             }
-
-            document.getElementById(CARD_TEXT_ID).onclick = 'executeCardAction(currentActionCard);';
 
 
         }
@@ -1224,11 +1222,17 @@
 
         //Var that the fields action of the next check_move_states is ignored
         let ignoreAction = false;
-        let executed = false;
+        let executed = true;
+        let showStoryCard = true;
+        let showStoryCard2 = true;
          function executeCardAction(action_card) {
 
-                 console.log('execute:');
-                 //console.log('execute:', action_card.card, currentPlayer.name);
+                 if (showStoryCard && executed || showStoryCard2) {
+                     showStory(currentPlayer);
+                     showStoryCard = false;
+                     showStoryCard2 = false;
+                     return;
+                 }
                  if (action_card === undefined || executed) return;
                  steps = action_card.action;
 
@@ -1249,13 +1253,12 @@
                  ignoreAction = true;
                  waitForAction = false;
                  executed = true;
+                 //TODO: showstoryhidden?
 
-                 console.log(story_shown_list.length, playerList.length);
 
-                 if (story_shown_list.length < playerList.length) {
-                     document.getElementById(CARD_TEXT_ID).setAttribute("onClick", "showStory(currentPlayer)");
-                     //TODO: KLick to contine
-
+             if (story_shown_list.length < playerList.length && winnerList.length === 0) {
+                     showStoryCard2 = true;
+                     document.getElementById(CARD_TEXT_ID).innerText += '\nKlicken zum Fortfahren';
                  }
 
 
@@ -1316,7 +1319,6 @@
         let story_hidden = false;
         function hide_story_text() {
             document.getElementById('story_telling_div').style.visibility = 'hidden';
-            story_hidden = true;
         }
 
     </script>
