@@ -160,8 +160,10 @@
                 //If max. 4 Players has been selected
                 if (players_name_list.length === 4) {
                     document.getElementById('btn_start_game').style.background = "#f55";
-                    document.getElementById('new_player_name_textarea').disabled = true;
                     document.getElementById('btn_next_player').disabled = true;
+                    document.getElementById('new_player_div').style.display = 'none';
+                    document.getElementById('character_story_div').style.display = 'none';
+                    document.getElementById('new_char_div').style.display = 'none';
                 }
 
                 //Add player to interface
@@ -222,7 +224,11 @@
         function selectImage(image) {
 			let icons = document.getElementsByClassName('icon');
 
-
+			//TODO: Bug
+            for(let index = 0; index < icons.length; index++) {
+                if (icons[index] === image.id || icons[index] === 'undefined' || icons[index] === null) continue;
+                document.getElementById(icons[index].id).style.background = "";
+            }
             document.getElementById(image.id).style.background = "#f00";
             selected_char = image.id;
 

@@ -79,7 +79,6 @@
         const ACTION_GIF_FROZEN = './public/images/action_card_frozen.jpg';
         //Knowledge GIF
         const  KNOWLEDGE_GIF_FROZEN = './public/images/knowledge_card_frozen.jpg';
-        //Empty field GIF TODO: Anders
         const EMPTY_FIELD_IMG = './public/images/blank.jpg';
         //Winner GIF
         const FIRST_IMAGE = './public/images/first.png';
@@ -601,16 +600,19 @@
 		function showStory(id) {
 		    story_hidden = true;
             try {
+
+
                 let image = id.player.texture.key;
                 for (let i = 0; i < story_shown_list.length; i++) {
                     if (image === story_shown_list[i]) {
-//list contains id
+                        //list contains id
                         return;
                     }
                 }
                 story_shown_list.push(image);
 
-                document.getElementById(CARD_ID).src = './public/images/' + image + '.png';
+
+                document.getElementById(CARD_ID).src = getImage(image);
 
                 let url = new URL(window.location.href);
                 story_type = url.searchParams.get("type");
@@ -657,6 +659,28 @@
                 console.log(e);
             }
         }
+        function getImage(name) {
+            let url = new URL(window.location.href);
+            story_type = url.searchParams.get("type");
+
+            let output = './public/images/';
+            if (story_type === 'real') {
+                switch (name) {
+                    case 'student_1': output += 'woman_1';break;
+                    case 'student_2': output += 'man_1';break;
+                    case 'student_3': output += 'man_2';break;
+                    case 'student_4': output += 'woman_2';break;
+                    default: return null;
+                }
+            } else {
+                output += name;
+            }
+
+            return output + '.png';
+
+        }
+
+
 
         /** Draw an image related to last printed image position
          *
@@ -995,6 +1019,7 @@
 
                     if (story_shown_list.length < playerList.length && winnerList.length === 0) {
                         showStoryCard = true;
+                        story_hidden = false;
                         document.getElementById(CARD_TEXT_ID).innerText += '\nKlicken zum Fortfahren';
 
                     }
@@ -1015,6 +1040,7 @@
 
                     if (story_shown_list.length < playerList.length && winnerList.length === 0) {
                         showStoryCard2 = true;
+                        story_hidden = false;
                         document.getElementById(CARD_TEXT_ID).innerText += '\nKlicken zum Fortfahren';
 
                     }
@@ -1037,6 +1063,7 @@
 
                     if (story_shown_list.length < playerList.length && winnerList.length === 0) {
                         showStoryCard = true;
+                        story_hidden = false;
                     }
                     break;
                 case 3:
@@ -1065,7 +1092,9 @@
 
         function getKnowledgeText() {
             let random_nr = Math.floor(Math.random() * knowledge_cards.length);
-            return knowledge_cards[random_nr];
+            let card = knowledge_cards[random_nr];
+            removeElement(knowledge_cards, random_nr);
+            return card;
         }
 
         function getActionText() {
@@ -1073,12 +1102,22 @@
             if (story_type === 'real') {
                 let random_nr = Math.floor(Math.random() * action_cards_real.length);
                 text = action_cards_real[random_nr];
+                removeElement(action_cards_real, random_nr)
             } else {
                 //Story is fictitious
                 let random_nr = Math.floor(Math.random() * action_cards_fictitious.length);
                 text = action_cards_fictitious[random_nr];
+                removeElement(action_cards_fictitious, random_nr);
             }
             return text
+        }
+        function removeElement(list, index) {
+            for( let i = 0; i < list.length; i++){
+                if ( i === index) {
+                    list.splice(i, 1);
+                }
+            }
+            return list;
         }
 
         function calculateNewField(nr) {
@@ -1143,6 +1182,7 @@
                      showStory(currentPlayer);
                      showStoryCard = false;
                      showStoryCard2 = false;
+                     story_hidden = true;
                      return;
                  }
                  if (action_card === undefined || executed) return;
@@ -1165,11 +1205,11 @@
                  ignoreAction = true;
                  waitForAction = false;
                  executed = true;
-                 //TODO: showstoryhidden?
 
 
              if (story_shown_list.length < playerList.length && winnerList.length === 0) {
                      showStoryCard2 = true;
+                     story_hidden = false;
                      document.getElementById(CARD_TEXT_ID).innerText += '\nKlicken zum Fortfahren';
                  }
 
