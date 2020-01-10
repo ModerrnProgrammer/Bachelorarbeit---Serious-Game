@@ -27,8 +27,6 @@
                 <span id="current_player_name_label"></span>
             </div>
 
-
-
             <div id="card_content">
                 <div id="image_div">
                     <img id="card_image" src="./public/images/blank.jpg" alt="Image">
@@ -44,6 +42,7 @@
             <p class='test_p'>Link zum Post Test:</p>
             <a id='test_link' href='https://www.survio.com/survey/d/F2O3Y8A4F8W3G2C3V'>https://www.survio.com/survey/d/F2O3Y8A4F8W3G2C3V</a>
             <br>
+            <button onclick="toGoal(38)">38</button>
 			<p class='test_p'>Oder den QR-Code scannen (Handy Kamera), um zum Post Test zu gelangen:</p>
 			<br>
 			<img id='qr_code' src='./public/images/post_test_code.png'>
@@ -127,9 +126,15 @@
         const CARD_TEXT_ID = 'card_text';
 
 
-        const FIRST_FIELD_TEXT = 'Du bist Erster!!';
-        const SECOND_FIELD_TEXT = 'Du bist Zweiter';
-        const THIRD_FIELD_TEXT = 'Du bist Dritter';
+        const FIRST_FIELD_TEXT_REAL = 'Du hast als Erster alles über das Präsentieren gelernt. Damit bist du deinen Mitbewerbern voraus und bekommst den besten Job! Herzlichen Glückwunsch.';
+        const SECOND_FIELD_TEXT_REAL = 'Du hast als Zweiter alles über das Präsentieren gelernt. Du bist zwar nicht der Beste und hast den ersten Job nicht bekommen. Doch dank deiner Fähigkeiten hast du direkt ein neues Angebot bekommen. Hertlichen Glückwunsch';
+        const THIRD_FIELD_TEXT_REAL = 'Du hast als Dritter alles über das Präsentieren gelernt. Du gehört zwar nicht zu den Besten, aber wirst dich mit deinem Wissen auf dem Markt durchsetzen können. Herzlichen Glückwunsch.';
+
+        const FIRST_FIELD_TEXT_FIC = 'Du hast als Bester präsentiert. Du bekommst die meisten Münzen. Herzlichen Glückwunsch!';
+        const SECOND_FIELD_TEXT_FIC = 'Du hast zwar nicht als Bester präsentiert, aber du hast dich dennoch gut geschlagen. Du erhältst die restlichen Münzen.  Herzlichen Glückwunsch!';
+        const THIRD_FIELD_TEXT_FIC = 'Deine Präsentation war nicht gerade die Beste. Ein Badankla war dennoch von deiner Präsentation überzeugt und gibt dir einige Münzen. Herzlichen Glückwunsch!';
+
+
         const TOO_MANY_STEPS_TEXT = 'Du musst das Ziel mit einer passenden Augenzahl erreichen!';
         const EMPTY_TEXT = 'Hier passiert nichts';
 
@@ -1067,29 +1072,40 @@
                     }
                     break;
                 case 3:
-
+                    document.getElementById(CARD_TEXT_ID).innerText = getFinishText(winnerList.length);
                     switch (winnerList.length) {
                         case 1:
                             document.getElementById(CARD_ID).src = FIRST_IMAGE;
-                            document.getElementById(CARD_TEXT_ID).innerText = FIRST_FIELD_TEXT;
+
                             break;
                         case 2:
                             document.getElementById(CARD_ID).src = SECOND_IMAGE;
-                            document.getElementById(CARD_TEXT_ID).innerText = SECOND_FIELD_TEXT;
                             break;
                         case 3:
                             document.getElementById(CARD_ID).src = THIRD_IMAGE;
-                            document.getElementById(CARD_TEXT_ID).innerText = THIRD_FIELD_TEXT;
                             break;
                     }
                     break;
                 default:
                     break;
             }
-
-
         }
 
+        function getFinishText(number) {
+            if (story_type === 'real') {
+                switch (number) {
+                    case 1: return FIRST_FIELD_TEXT_REAL;
+                    case 2: return SECOND_FIELD_TEXT_REAL;
+                    case 3: return THIRD_FIELD_TEXT_REAL;
+                }
+            } else {
+                switch (number) {
+                    case 1: return FIRST_FIELD_TEXT_FIC;
+                    case 2: return SECOND_FIELD_TEXT_FIC;
+                    case 3: return THIRD_FIELD_TEXT_FIC;
+                }
+            }
+        }
         function getKnowledgeText() {
             let random_nr = Math.floor(Math.random() * knowledge_cards.length);
             let card = knowledge_cards[random_nr];
