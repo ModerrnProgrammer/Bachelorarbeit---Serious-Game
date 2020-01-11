@@ -23,8 +23,8 @@
             <div id="current_player_and_cube_div">
                 <img id="cube_img" src="./public/images/dice_one.png" onclick="roll_the_dice()">
                 <span id="current_player_name_span">Aktueller Spieler:</span>
-                <br>
-                <span id="current_player_name_label"></span>
+                <span id="current_player_name_label"><b></b></span>
+                <img id="current_player_img" src="">
             </div>
 
             <div id="card_content">
@@ -40,7 +40,7 @@
         </div>
         <div id='test_div'>
             <p class='test_p'>Link zum Post Test:</p>
-            <a id='test_link' href='https://www.survio.com/survey/d/F2O3Y8A4F8W3G2C3V'>https://www.survio.com/survey/d/F2O3Y8A4F8W3G2C3V</a>
+            <a id='test_link' href='https://www.survio.com/survey/d/F2O3Y8A4F8W3G2C3V' target="_blank">https://www.survio.com/survey/d/F2O3Y8A4F8W3G2C3V</a>
             <br>
 			<p class='test_p'>Oder den QR-Code scannen (Handy Kamera), um zum Post Test zu gelangen:</p>
 			<br>
@@ -252,6 +252,7 @@
 
             currentPlayer = playerList[currentPlayerPos];
             document.getElementById('current_player_name_label').innerText = currentPlayer.name;
+            document.getElementById('current_player_img').src = getImage(currentPlayer.player.texture.key);
             beforeOverlapping = true;
         }
 

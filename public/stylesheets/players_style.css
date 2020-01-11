@@ -14,22 +14,6 @@
     height: 3rem;
 }
 
-#new_player_name_p, #new_player_name_textarea {
-    font-size: 30px;
-}
-
-#new_player_name_p {
-    margin: 5px;
-    width: auto;
-}
-
-#new_player_name_textarea {
-    text-align: center;
-    height: 40px;
-    width: 70%;
-}
-
-
 img {
     width: 50px;
     height: 50px;
@@ -43,14 +27,7 @@ img {
     margin-top: 10px;
 }
 
-#new_player_div {
-    width: 90%;
-    margin-right: auto;
-    margin-left: auto;
-    margin-bottom: 20px;
-    background-color: lightskyblue;
-    text-align: center;
-}
+
 
 
 
@@ -124,9 +101,7 @@ label {
 #new_char_div {
     background-color: lightskyblue;
     width: 90%;
-    margin-right: auto;
-    margin-left: auto;
-    margin-bottom: 20px;
+    margin: 20px auto;
 }
 
 #wrapper_images {

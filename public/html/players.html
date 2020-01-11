@@ -121,13 +121,9 @@
                     return;
                 }
 				
-                let name = document.getElementById('new_player_name_textarea').value;
+                let name = getName(selected_char);
 
-                //Check if there is a char selected
-                if (name === '') {
-                    alert('Der Name darf nicht leer sein!');
-                    return;
-                }
+
 				
 				
                 //Check if name is already chosen
@@ -137,7 +133,6 @@
                 for(i in players_name_list) {
                     if (players_name_list[i] === name) {
                         alert('Dieser Name ist bereits in der Spielerliste eingetragen. Wählen Sie bitte einen anderen.');
-                        document.getElementById('new_player_name_textarea').value = '';
                         return;
                     }
 
@@ -150,7 +145,6 @@
                 players_name_list.push(name);
 
                 //Clear fields and add a gray filter
-                document.getElementById('new_player_name_textarea').value = '';
                 document.getElementById(selected_char).style.filter = 'grayscale(0.9)';
                 document.getElementById(selected_char).style.webkitFilter = 'grayscale(0.9)';
                 document.getElementById(selected_char).style.background = "lightskyblue";
@@ -161,7 +155,6 @@
                 if (players_name_list.length === 4) {
                     document.getElementById('btn_start_game').style.background = "#f55";
                     document.getElementById('btn_next_player').disabled = true;
-                    document.getElementById('new_player_div').style.display = 'none';
                     document.getElementById('character_story_div').style.display = 'none';
                     document.getElementById('new_char_div').style.display = 'none';
                 }
@@ -194,6 +187,26 @@
             }
 
 
+        }
+
+        function getName(id) {
+            if (story_type === 'real') {
+                switch (id) {
+                    case 'img_div_1': return 'Melanie';
+                    case 'img_div_2': return 'Martin';
+                    case 'img_div_3': return 'Julian';
+                    case 'img_div_4': return 'Nina';
+                    default: return null;
+                }
+            } else {
+                switch (id) {
+                    case 'img_div_1': return 'Humpf';
+                    case 'img_div_2': return 'Mumit';
+                    case 'img_div_3': return 'Opsti';
+                    case 'img_div_4': return 'Wumstl';
+                    default: return null;
+                }
+            }
         }
 
         function startGame() {
@@ -327,10 +340,7 @@
     <div id="headline_div">
         <label id="players_headline">Spieler erstellen</label>
     </div>
-    <div id="new_player_div">
-        <p id="new_player_name_p">Name: </p>
-        <textarea id="new_player_name_textarea"></textarea>
-    </div>
+
 
     <div id="created_players_div">
         <p id='created_players_p'><b>Eingetragene Spieler:</b></p>
