@@ -40,7 +40,7 @@ body {
 }
 
 #images_div {
-    width: 70%;
+    width: 100%;
 }
 
 .story_desc_label {
@@ -51,9 +51,8 @@ body {
 #select_story_p {
     font-size: 40px;
     text-align: center;
-    margin-left: 30%;
 	margin-bottom: 5px;
-	margin-top: 0px;
+	margin-top: 0;
     background-color: #00B7FF;
 }
 
@@ -85,7 +84,6 @@ body {
 #pre_test_hint{
 	font-size: 2rem;
 	text-align: center;
-	margin-left: 20%;
 	margin-top: 0px;
 }
 
