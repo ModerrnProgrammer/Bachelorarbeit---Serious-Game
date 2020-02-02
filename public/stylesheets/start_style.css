@@ -20,13 +20,14 @@ body {
     vertical-align: center;
 }
 
-#real_story_outer_span:hover, #fictitious_story_outer_span:hover {
+#fictitious_story_outer_span:hover, #real_story_outer_span:hover {
     cursor: grab;
 }
-
 #real_story_outer_span {
     left: 5%;
 }
+
+
 
 #fictitious_story_outer_span {
     left: 55%;

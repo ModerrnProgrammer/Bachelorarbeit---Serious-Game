@@ -113,6 +113,7 @@
 
         const STORY_START_VALUE = "Wähle einen Charakter aus, um seine Geschichte zu erfahren.";
 
+		//Spieler eintragen
         function nextPlayer() {
             try {
                 //Check if there is a char selected
@@ -189,6 +190,7 @@
 
         }
 
+		//Namen eines Spielers anhand der ID bekommen
         function getName(id) {
             if (story_type === 'real') {
                 switch (id) {
@@ -209,6 +211,7 @@
             }
         }
 
+		//Start des Spieles (Nächste Webseite)
         function startGame() {
 
             if (players_list.length < 2) {
@@ -234,6 +237,7 @@
 			}
         }
 
+		//Auswählen eines neuen Bildes
         function selectImage(image) {
 			let icons = document.getElementsByClassName('icon');
 
@@ -250,6 +254,7 @@
             document.getElementById('character_story_head').innerText = 'Das ist meine Geschichte:';
         }
 
+		//Story Beschreibung anhand der ID bekommen
         function getStoryDesc(id) {
             let url = new URL(window.location.href);
             story_type = url.searchParams.get("type");
@@ -272,6 +277,7 @@
                 }
             }
         }
+		//URL encoding
         function encodeQueryData(data) {
             const ret = [];
             for (let d in data)
@@ -279,7 +285,7 @@
             return ret.join('&');
         }
 
-
+		//Name eines Bildes anhand der ID bekommen
         function getImage(id) {
             let url = new URL(window.location.href);
             story_type = url.searchParams.get("type");
@@ -306,6 +312,7 @@
 
         }
 
+		//Laden der Standardbilder
         function initImages() {
             let url = new URL(window.location.href);
             let story_type = url.searchParams.get("type");

@@ -17,8 +17,6 @@
             <p>Klicken zum Fortfahren</p>
         </div>
 
-
-
         <div id="card_div">
             <div id="current_player_and_cube_div">
                 <img id="cube_img" src="./public/images/dice_one.png" onclick="roll_the_dice()">
@@ -49,8 +47,7 @@
 
     </div>
 
-
-
+	<!--Phaser OP Konfiguration-->
     <script>
         var config = {
             type: Phaser.AUTO,
@@ -71,7 +68,6 @@
             }
         };
 
-
         //Quelle: animography.net
         //Action GIF
         const ACTION_GIF_FROZEN = './public/images/action_card_frozen.jpg';
@@ -83,44 +79,36 @@
         const SECOND_IMAGE = './public/images/second.png';
         const THIRD_IMAGE = './public/images/third.png';
 
-        //var objects = {};
+    
         let game = new Phaser.Game(config);
 
-        //All game field positions
+        // Listen mit Spielfeld- / Spielkartenwerten
         let gamefield_positions;
-
-        //game field type list
         let gamefield_types;
-
-        // List of all Knowledge Cards
         let knowledge_cards;
-
-        // List of all Action cards - reality near story
         let action_cards_real;
-
-        // List of all Action cards - fictitious story
         let action_cards_fictitious;
 
-        //public var for steps to go
+        //Schritte, die noch zu gehen sind
         let steps = 0;
 
-        //public print x and y values - Start position
+        //Öffentliche Print x und y Positionen. Startpos zum zeichnen
         var_print_x = 250;
         var_print_y = 250;
 
-        //game is busy like moving
+        //Ist das Spiel beschäftigt
         let ready = true;
 
-        //game story type
+        //Spielgeschichtentyp
         let story_type = '';
 
-        //Player variables
+        //Spieler variablen
         let currentPlayer;
         let currentPlayerPos = -1;
         let playerList = [];
         let winnerList = [];
 
-        //Constants
+        //	Konstanten
         const CARD_ID = 'card_image';
         const CARD_TEXT_ID = 'card_text';
 
@@ -153,7 +141,7 @@
 
 		const START_TEXT = "Herzlich Willkommen zum Serious Game by Moritz Rohde. Denken Sie nach dem Spiel an den Post Test. (Jeder Spieler) Der Link dazu ist unten auf dieser Seite. Viel Spaß! Klicken zum Fortfahren.";
 			
-		//Story texts real story
+		//Storytext realitätsnah
 		const STORY_MELANIE_LORM_SHORT = "Ich bin die Melanie. Ich bin im 8. Semester und studiere Wirtschaftsinformatik.";
 
 		const STORY_MARTIN_KIRTZ_SHORT  = "Ich bin der Martin und ich bin im 6. Semester und studiere Maschbau.";
@@ -162,8 +150,7 @@
 
 		const STORY_NINA_KLAMM_SHORT  = "Ich bin die Nina und ich studiere Wirtschaftsingenieurwesen im 7. Semester.";
 
-		//Story texts fictitious story
-
+		//Storytext fiktiv
         const STORY_HUMPF_SHORT = "Ich bin der Humpf. Und ich habe Münzen beantragt, um den Ausbau der Himberrsträucher voranzutreiben.";
 
 		const STORY_MUMTI_SHORT  = "Ich bin der Mumit. Und ich habe Münzen beantragt, um den Ausbau der Kiesstrände voranzutreiben.";
@@ -171,27 +158,24 @@
 		const STORY_OPSTI_SHORT  = "Ich bin der Opsti. Und ich habe Münzen beantragt, um den Ausbau der Fabrik für unsichtbare Kugelschreiber voranzutreiben.\n";
 
 		const STORY_WUMSTL_SHORT  = "Ich bin der Wumstl. Und ich habe Münzen beantragt, um den Ausbau der Fabrik für rote Turnbeutel voranzutreiben.";
-
-
-			
-			
+		
         function preload () {
             try {
 
 
-                //Load Characters - Monsters
+                //Laden der Charaktere - Monster
                 this.load.image('monster_red', './public/images/monster_red_mini.png');
                 this.load.image('monster_green', './public/images/monster_green_mini.png');
                 this.load.image('monster_lightgreen', './public/images/monster_lightgreen_mini.png');
                 this.load.image('monster_purple', './public/images/monster_purple_mini.png');
 
-                //load Characters - Students
+                //Laden der Charaktere - Studenten
                 this.load.image('student_1', './public/images/woman_mini_1.png');
                 this.load.image('student_2', './public/images/man_mini_1.png');
                 this.load.image('student_3', './public/images/man_mini_2.png');
                 this.load.image('student_4', './public/images/woman_mini_2.png');
 
-                //Load game fields
+                //Laden der Spielfeldbilder
                 this.load.image('explode', './public/images/explode.png');
                 this.load.image('lamp', './public/images/lamp.png');
                 this.load.image('start', './public/images/start_field.png');
@@ -204,6 +188,7 @@
             }
         }
 
+		//Wertinitialisierungen
         function create () {
             this.cameras.main.backgroundColor.setTo(135, 206, 250);
 
@@ -216,7 +201,6 @@
 
                 generateGameBoard(this);
 
-                //Load params
                 loadParameters(this);
 
                 initStoryText();
@@ -229,6 +213,7 @@
             }
         }
 
+		//Klasse, die die Variablen einer Spielfigur umfasst
         class Character {
 
             constructor(name, player, field_nr) {
@@ -239,9 +224,9 @@
 
         }
 
-
+		//Der nächste Spieler ist an der Reihe
         function nextPlayer() {
-            //Random player starts the game
+            //Ein zufölliger Spieler beginnt
             if (currentPlayerPos === -1)
                 currentPlayerPos = parseInt(Math.random() * playerList.length, 10);
 
@@ -256,8 +241,7 @@
             beforeOverlapping = true;
         }
 
-
-
+		//Zeichnen des Startfeldes und 2 weiteren Feldern
         function print_start_fields(game) {
             const start_field_bias = 50;
             const x_bias_left = 35;
@@ -268,7 +252,8 @@
             draw_line(game, 400 - x_bias_left, 250, var_print_x, var_print_y);
             game.add.image(var_print_x, var_print_y, 'empty');
         }
-
+		
+		//Allgemeine Methode zum Zeichnen weiterer Felder
         function print_common_fields(game) {
             print_field(game, 'below', 'lamp');
             print_field(game, 'below', 'explode');
@@ -312,7 +297,8 @@
             print_field(game, 'above', 'lamp');
             print_field(game, 'above', 'lamp');
         }
-
+		
+		//Methode zum Zeichnen des Zielfeldes
         function print_goal_field(game) {
             const y_bias_above = 35;
             const goal_pos_bias = 150;
@@ -320,18 +306,16 @@
             draw_line(game, var_print_x, var_print_y - y_bias_above, var_print_x, var_print_y - 100);
             game.add.image(var_print_x, var_print_y - goal_pos_bias, 'goal');
         }
-
+		
+		//Methode zum Zeichnen des Spielfeldes
         function generateGameBoard(game) {
-
-            //Manual print first 3 fields
             print_start_fields(game);
-            //Relational printing
             print_common_fields(game);
-            //Manual print last field
             print_goal_field(game);
 
         }
-
+		
+		//Feldpositionsinitialisierung
         function initFieldValues() {
             gamefield_positions = JSON.parse('[{"pos_x":400,"pos_y":400},{"pos_x":400,"pos_y":250},' +
                 '{"pos_x":250,"pos_y":250},{"pos_x":250,"pos_y":350},' +
@@ -351,7 +335,8 @@
                 '{"pos_x":1050,"pos_y":350}, {"pos_x":1050,"pos_y":200}]');
 
         }
-
+		
+		//Storytextwahl
         function initStoryText() {
             if (story_type === 'real') {
                 document.getElementById('story_telling_p').innerText = REAL_STORY_TEXT;
@@ -360,7 +345,8 @@
 
             }
         }
-
+		
+		//Feldtypeninitialisierung
         function initFieldTypes() {
             /*
              * -1: Start field
@@ -372,7 +358,8 @@
             gamefield_types = [-1, 2, 0, 1, 2, 1, 2, 1, 0, 2, 1, 2, 1, 2, 0, 1, 1, 1, 2, 1, 0, 2, 1, 2, 1, 2, 0, 2,
                 1, 2, 0, 1, 2, 1, 2, 1, 1, 0, 1, 1, 2, 2, 1, 1, 3];
         }
-
+		
+		//Wissenskarteninitialisierung
         function initKnowledgeCards() {
             knowledge_cards = [
                 "Ziele des Präsentierens sind Informieren und Überzeugen",
@@ -418,7 +405,8 @@
                 "Wovon hängt die Medienwahl ab?  Thema Raum Teilnehmer Medien Präsentierender Unterlagen"
             ];
         }
-        
+		
+        //Aktionskarteninitialisierung - Studenten
         function initActionCardsReal() {
             action_cards_real = JSON.parse('[' +
                 '{"text": "Du hast vergessen die Gliederung deiner Abschluss- präsentation rechtzeitig abzugeben.' +
@@ -507,7 +495,8 @@
                 ' "action": -1, "card": 1}' +
                 ']');
         }
-
+		
+		//Aktionskarteninitialisierung - Monster
         function initActionCardsFictitious() {
             action_cards_fictitious = JSON.parse('[' +
                 '{"text":"Die restlichen Badanklas lachen dich hinter deinem Rücken für deine Präsentationen aus.' +
@@ -596,11 +585,13 @@
 			checkCardTextPosition();
 		}
 		
+		//Positionsupdate des Kartentextes
 		function checkCardTextPosition() {
 			rect = document.getElementById(CARD_ID).getBoundingClientRect();
 			document.getElementById(CARD_TEXT_ID).style.left = rect.x + 'px';
 		}
-
+		
+		//Storyanzeige
 		let story_shown_list = [];
 		function showStory(id) {
 		    story_hidden = true;
@@ -610,7 +601,6 @@
                 let image = id.player.texture.key;
                 for (let i = 0; i < story_shown_list.length; i++) {
                     if (image === story_shown_list[i]) {
-                        //list contains id
                         return;
                     }
                 }
@@ -658,12 +648,12 @@
                     }
                 }
                 document.getElementById(CARD_TEXT_ID).innerText += '\nKlicke nun auf den Würfel.';
-                //document.getElementById(CARD_ID).src = EMPTY_FIELD_IMG;
-
             } catch (e) {
                 console.log(e);
             }
         }
+		
+		//Abruf des Bildes eines Charakters abhängig von der Spielgeschichte und dem übergebenen Namen
         function getImage(name) {
             let url = new URL(window.location.href);
             story_type = url.searchParams.get("type");
@@ -685,13 +675,11 @@
 
         }
 
-
-
-        /** Draw an image related to last printed image position
+        /** Zeichnet ein Bild abhängig von der Position des zuletzt gezeichneten Bildes
          *
-         * @param game Game to print on
-         * @param mode Direction of line and related new position direction
-         * @param image Image to print
+         * @param game Canvas zum zeichnen
+         * @param mode Richtung des neuen Feldes
+         * @param image Zu zeichnendes Bild
          */
         function print_field(game, mode, image) {
             let old_x = var_print_x;
@@ -727,14 +715,7 @@
             game.add.image(var_print_x, var_print_y, image);
         }
 
-        /** Drawing a line from point A to point B
-         *
-         * @param game Game to print on
-         * @param x1 1st point x position
-         * @param y1 1st point y position
-         * @param x2 2nd point x position
-         * @param y2 2nd point y position
-         */
+        //Zeichnet eine Linie von Punkt A zu Punkt B
         function draw_line(game, x1, y1, x2, y2) {
             let bias = 3;
             var graphics = game.add.graphics({ lineStyle: { width: 2, color: 0x000000 } });
@@ -742,7 +723,7 @@
             graphics.strokeLineShape(line);
         }
 
-        //Is the cube currently rolling
+        //Ist der Würfel aktiv
         let roll = false;
         const TIME_OF_ROLLING_CUBE = 1500;
         async function  roll_the_dice() {
@@ -772,7 +753,8 @@
                 }
             }
         }
-
+		
+		//Würfel update Methode
         function getDiceImage(number) {
             const BASE_PATH = './public/images/';
             switch (number) {
@@ -785,7 +767,7 @@
             }
         }
 
-        //Game is finished variable
+        //Update Methode mit Spiellogik
         let end = false;
         function update() {
 
@@ -795,7 +777,8 @@
                 check_move_states();
             }
         }
-
+		
+		//Methode zur Überprüfung der Spiellogikvariablen zur Bewegung eines Spielers
         let waitForAction = false;
         let beforeOverlapping = true;
         function check_move_states() {
@@ -805,7 +788,7 @@
             //Würfelzahl ist zu groß, da passend ins Ziel gegangen werden soll
 
             if (currentPlayer.field_nr + steps > gamefield_types.length) {
-                //Reset moving init
+                
                 currentPlayer.field_nr--;
                 steps = 0;
                 document.getElementById(CARD_TEXT_ID).innerText = TOO_MANY_STEPS_TEXT;
@@ -822,7 +805,7 @@
 
             ready = false;
 
-            //Start field pos check
+            //Startfeld positionscheck - Für die Aktionskarte, die einen an der Start zurück schickt
             if (currentPlayer.field_nr < 0) {
                 currentPlayer.field_nr = 0;
                 ignoreAction = false;
@@ -838,7 +821,14 @@
             move(direction, stop_value_x, stop_value_y, SPEED);
 
         }
-
+		
+		/** Steuert die Bewegung der Spielfiguren
+         *
+         * @param direction Gibt die Richtung an, in die Verschoben werden soll
+         * @param stop_value_x Positionsende in X Richtung
+         * @param stop_value_y Positionsende in Y Richtung
+         * @param speed Geschwindigkeit der Bewegung / Abstand der Verschiebung pro Aufruf
+         */
         function move(direction, stop_value_x, stop_value_y, speed) {
             switch (direction) {
                 case 'up':
@@ -869,24 +859,26 @@
                     break;
             }
         }
-
+		
+		//Überprüfen ob Spieler vor der Bewegung in die Mitte seines Feldes zurückgesetzt werden muss
         function checkOverlappingBefore() {
             let pos_tupel = calculateNewField(currentPlayer.field_nr - 1);
             currentPlayer.player.x = pos_tupel.pos_x;
             currentPlayer.player.y = pos_tupel.pos_y;
         }
-
-         function checkLastMove(value1, value2) {
-            //if last check_move_states
+		
+		//Überprüfen von Zuständen der Variablen nach einer Bewegung
+        function checkLastMove(value1, value2) {
+            //Wenn des der letze Schritt war -> check_move_states
             if (value1 === value2) {
                 if (currentPlayer.field_nr === 0) {
                     steps = 0;
                 }
-                //Reset Shift variables
+                //Zurücksetzen der Shift variables
                 active_x_shift = false;
                 active_y_shift = false;
 
-                // Are steps left?
+                //Sind noch Schritte übrig
                 if (steps > 0) {
                     steps--;
                     if (steps > 0) currentPlayer.field_nr++;
@@ -908,9 +900,9 @@
                 }
             }
         }
-
+		
+		//Überprüfung, ob zwei oder mehr Spielcharaktere auf einem Feld stehen. Wenn ja, verschieben
         function checkOverlappingAfter(diff) {
-
 
             let move_list = [];
             for(let i = 0; i < playerList.length; i++) {
@@ -952,6 +944,7 @@
 
         }
 
+		//Überprüfen, ob ein weiterer Spieler das Ziel erreicht hat
         let winner = '';
         function checkWin() {
 
@@ -960,7 +953,7 @@
                     winner = currentPlayer.name;
                 }
 
-                //Remove player from Player Pool
+                //Spieler vom aktiven Spielerpool entfernen
 
 
                 for (let i = 0; i < playerList.length; i++) {
@@ -992,7 +985,7 @@
                         alert('ERROR');
                 }
 
-                //Game is finished when just one last player has not reached the goal
+                //Das Spiel ist beendet, sobald nur noch ein aktiver Spieler existiert
                 if (playerList.length === 1) {
                     end = true;
                     alert('Das Spiel ist zu Ende! ' + winner + " hat das Spiel gewonnen. Bitte füllen Sie nun den Post Test aus. Danke für's Spielen!! \nUmfrage: https://www.survio.com/survey/d/F2O3Y8A4F8W3G2C3V \nOder unten auf dieser Seite");
@@ -1002,8 +995,8 @@
             }
         }
 
+		//Ändern der aktuellen Spielkarte
         let currentActionCard;
-
         const GIF_DURATION = 1500;
          function setImageAndText() {
             let type = gamefield_types[currentPlayer.field_nr];
@@ -1012,12 +1005,12 @@
                 case -1:
                     break;
                 case 0:
-                    //Ignore action when reaching field with card action
+                    
                     if (ignoreAction) {
                         ignoreAction = false;
                         break;
                     }
-                    // Reset card and text
+                    
                     document.getElementById(CARD_ID).src = EMPTY_FIELD_IMG;
                     document.getElementById(CARD_TEXT_ID).innerText = 'Leeres Feld:\n' + EMPTY_TEXT;
 
@@ -1031,14 +1024,13 @@
 
                     break;
                 case 1:
-                    //Ignore action when reaching field with card action
+                    
                     if (ignoreAction) {
                         ignoreAction = false;
                         break;
                     }
 
-                    // Set card and text to knowledge theme
-                    // Choose random knowledge phrase
+                    
                     document.getElementById(CARD_ID).src = KNOWLEDGE_GIF_FROZEN;
                     document.getElementById(CARD_TEXT_ID).innerText = 'Wissenskarte:\n' + getKnowledgeText();
 
@@ -1052,7 +1044,7 @@
 
                     break;
                 case 2:
-                    //Ignore action when reaching field with card action
+                    
                     if (ignoreAction) {
                         ignoreAction = false;
                         break;
@@ -1091,6 +1083,7 @@
             }
         }
 
+		//Setzen des Text, wenn ein Spieler das Ziel erreicht hat
         function getFinishText(number) {
             if (story_type === 'real') {
                 switch (number) {
@@ -1106,6 +1099,8 @@
                 }
             }
         }
+		
+		//Abruf einer zufälligen Wissenskarte
         function getKnowledgeText() {
             let random_nr = Math.floor(Math.random() * knowledge_cards.length);
             let card = knowledge_cards[random_nr];
@@ -1113,6 +1108,7 @@
             return card;
         }
 
+		//Abruf einer zufälligen Aktionskarte
         function getActionText() {
             let text;
             if (story_type === 'real') {
@@ -1120,13 +1116,15 @@
                 text = action_cards_real[random_nr];
                 removeElement(action_cards_real, random_nr)
             } else {
-                //Story is fictitious
+                //Story ist fiktiv
                 let random_nr = Math.floor(Math.random() * action_cards_fictitious.length);
                 text = action_cards_fictitious[random_nr];
                 removeElement(action_cards_fictitious, random_nr);
             }
             return text
         }
+		
+		//Entfernen eines Elements an übergebenem Index aus einer übergebenen Liste 
         function removeElement(list, index) {
             for( let i = 0; i < list.length; i++){
                 if ( i === index) {
@@ -1136,13 +1134,14 @@
             return list;
         }
 
+		//Berechnung der aktuellen Feldposition
         function calculateNewField(nr) {
             if (nr < 0) nr = 0;
             currentPlayer.player.field_nr = 0;
             return gamefield_positions[nr];
         }
 
-        //Vars to execute a full check_move_states and then reevaluate the direction of the movement
+        //Variablen, die überprüfen, dass Bewegungen vollständig ausgeführt werden, sobald die Bewegung in eine Richtung gestartet wurde
         let active_y_shift = false;
         let active_x_shift = false;
         function calculateDirection(pos_x, pos_y, stop_value_x, stop_value_y) {
@@ -1163,6 +1162,7 @@
             return 'no action';
         }
 
+		//Überprüfen der Bewegung in X Richtung
         function check_X_Shift(pos_x, stop_value_x) {
             if (pos_x > stop_value_x) {
                 return 'left';
@@ -1173,6 +1173,7 @@
             return 'no action';
         }
 
+		//Überprüfen der Bewegung in Y Richtung
         function check_Y_Shift(pos_y, stop_value_y) {
             if (pos_y > stop_value_y) {
                 return 'up';
@@ -1183,15 +1184,17 @@
             return 'no action';
         }
 
+		//Methode zum Warten
         function Sleep(milliseconds) {
             return new Promise(resolve => setTimeout(resolve, milliseconds));
         }
 
-        //Var that the fields action of the next check_move_states is ignored
+        //Variablen damit in Aktionen nur ausgelöst werden, wenn sie auch ausgelöst werden dürfen
         let ignoreAction = false;
         let executed = true;
         let showStoryCard = true;
         let showStoryCard2 = true;
+		//Ausführen einer Aktionskarte
          function executeCardAction(action_card) {
 
                  if (showStoryCard && executed || showStoryCard2) {
@@ -1205,12 +1208,12 @@
                  steps = action_card.action;
 
 
-                 //Go forward card
+                 //Geh nach vorne
                  if (steps > 0) currentPlayer.field_nr++;
-                 //Go back card
+                 //Geh zurück
                  if (steps < 0) currentPlayer.field_nr--;
 
-                 //New science card
+                 //Neue Wissenskarte
                  if (action_card.card === 1) {
                      document.getElementById(CARD_TEXT_ID).innerText = getKnowledgeText();
                      document.getElementById(CARD_ID).src = KNOWLEDGE_GIF_FROZEN;
@@ -1233,19 +1236,11 @@
 
          }
 
-        function toGoal(num) {
-            steps = +num;
-            currentPlayer.field_nr++;
-        }
-
-        /** Loading game Parameters from URL
-         *  including game type, player names and playes images
-         * @param game
-         */
+        //Laden der Spielparameter aus der URL
         function loadParameters(game) {
             try {
                 let url = new URL(window.location.href);
-                //Story type
+                //Storytyp
                 story_type = url.searchParams.get("type");
 
                 let player_url_list = [];
@@ -1272,18 +1267,18 @@
                         playerList.push(createGameCharacters(game, json_player.name, json_player.image));
                     }
                 }
-
             } catch (e) {
                 console.log(e);
             }
         }
 
+		//Erstellen eines neuen Spielcharakters zum Spielbeginn
         function createGameCharacters(game, name, image) {
             let player = game.add.sprite(400,400, image);
             return new Character(name, player, 0);
-
         }
 
+		//Verstecken des Einleitungstextes
         let story_hidden = false;
         function hide_story_text() {
             document.getElementById('story_telling_div').style.visibility = 'hidden';
